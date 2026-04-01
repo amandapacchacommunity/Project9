@@ -1,1 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advancement Targeting Dashboard</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #1f2a44;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --shadow: 0 10px 25px rgba(31, 42, 68, 0.08);
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+    }
 
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .nav {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: var(--text);
+      background: white;
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      box-shadow: var(--shadow);
+    }
+
+    .nav a.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .hero {
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 2rem;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 850px;
+      line-height: 1.5;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .card, .filter-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .filter-card {
+      padding: 14px;
+    }
+
+    .filter-card label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .filter-card select,
+    .filter-card input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .summary-card {
+      padding: 18px;
+    }
+
+    .summary-card h3 {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .summary-card .value {
+      font-size: 2rem;
+      font-weight: 800;
+      margin: 10px 0 6px;
+    }
+
+    .summary-card .note {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .card {
+      padding: 18px;
+      margin-bottom: 24px;
+    }
+
+    .card h2 {
+      margin: 0 0 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      font-size: 0.82rem;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    @media (max-width: 640px) {
+      .container { padding: 16px; }
+      .hero h1 { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav class="nav">
+      <a href="index.html">Risk Overview</a>
+      <a href="targeting.html" class="active">Targeting</a>
+      <a href="relationships.html">Relationships</a>
+    </nav>
+
+    <section class="hero">
+      <h1>Targeting and Solicitation Dashboard</h1>
+      <p>
+        A portfolio action page showing coded donor records, targeting score, recommended ask amount,
+        and next best action for solicitation planning.
+      </p>
+    </section>
+
+    <section class="filters">
+      <div class="filter-card">
+        <label for="targetTypeFilter">Target Type</label>
+        <select id="targetTypeFilter">
+          <option value="All">All</option>
+          <option value="Upgrade">Upgrade</option>
+          <option value="Renewal">Renewal</option>
+          <option value="Recovery">Recovery</option>
+          <option value="Stewardship">Stewardship</option>
+        </select>
+      </div>
+      <div class="filter-card">
+        <label for="segmentFilter">Segment</label>
+        <select id="segmentFilter">
+          <option value="All">All Segments</option>
+          <option value="Major Gifts">Major Gifts</option>
+          <option value="Mid-Level">Mid-Level</option>
+          <option value="Annual Fund">Annual Fund</option>
+          <option value="Membership">Membership</option>
+        </select>
+      </div>
+      <div class="filter-card">
+        <label for="searchBox">Search Code / Initials</label>
+        <input id="searchBox" type="text" placeholder="DG-001 or A.P." />
+      </div>
+    </section>
+
+    <section class="summary-grid" id="summaryGrid"></section>
+
+    <section class="card">
+      <h2>Priority Target List</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Code</th>
+            <th>Initials</th>
+            <th>Segment</th>
+            <th>Target Type</th>
+            <th>Targeting Score</th>
+            <th>Recommended Ask</th>
+            <th>Next Best Action</th>
+          </tr>
+        </thead>
+        <tbody id="targetTableBody"></tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>Targeting Logic</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Target Type</th>
+            <th>Logic</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Upgrade</td>
+            <td>Low risk, active membership, high fulfillment history, strong retention</td>
+          </tr>
+          <tr>
+            <td>Renewal</td>
+            <td>Membership donor due for renewal, moderate ask, active or recently lapsed</td>
+          </tr>
+          <tr>
+            <td>Recovery</td>
+            <td>Lapsed or high-risk donor with open balance and reduced retention</td>
+          </tr>
+          <tr>
+            <td>Stewardship</td>
+            <td>Requires relationship-building before a larger ask</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <script>
+    const donors = [
+      { donorCode:"DG-001", displayName:"A.P.", segment:"Major Gifts", targetType:"Recovery", targetingScore:62, askAmount:10000, nextAction:"Schedule stewardship call" },
+      { donorCode:"DG-002", displayName:"J.L.", segment:"Major Gifts", targetType:"Upgrade", targetingScore:91, askAmount:25000, nextAction:"Personal visit" },
+      { donorCode:"DG-003", displayName:"M.C.", segment:"Mid-Level", targetType:"Stewardship", targetingScore:70, askAmount:5000, nextAction:"Proposal follow-up" },
+      { donorCode:"DG-004", displayName:"T.B.", segment:"Membership", targetType:"Renewal", targetingScore:45, askAmount:250, nextAction:"Renewal outreach" },
+      { donorCode:"DG-005", displayName:"C.R.", segment:"Annual Fund", targetType:"Upgrade", targetingScore:88, askAmount:1500, nextAction:"Upgrade annual ask" },
+      { donorCode:"DG-006", displayName:"J.N.", segment:"Mid-Level", targetType:"Stewardship", targetingScore:73, askAmount:3500, nextAction:"Flexible payment plan" },
+      { donorCode:"DG-007", displayName:"R.A.", segment:"Annual Fund", targetType:"Recovery", targetingScore:39, askAmount:500, nextAction:"Stewardship first" },
+      { donorCode:"DG-008", displayName:"C.D.", segment:"Membership", targetType:"Renewal", targetingScore:82, askAmount:300, nextAction:"Recurring membership ask" },
+      { donorCode:"DG-009", displayName:"P.S.", segment:"Major Gifts", targetType:"Upgrade", targetingScore:79, askAmount:15000, nextAction:"Monitor cadence" },
+      { donorCode:"DG-010", displayName:"D.J.", segment:"Membership", targetType:"Renewal", targetingScore:54, askAmount:200, nextAction:"Targeted renewal email" },
+      { donorCode:"FDN-003", displayName:"PFF", segment:"Major Gifts", targetType:"Upgrade", targetingScore:88, askAmount:50000, nextAction:"Prepare funding brief" }
+    ];
+
+    const currency = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0
+    });
+
+    function filteredDonors() {
+      const targetType = document.getElementById('targetTypeFilter').value;
+      const segment = document.getElementById('segmentFilter').value;
+      const search = document.getElementById('searchBox').value.trim().toLowerCase();
+
+      return donors.filter(d => {
+        const targetTypeMatch = targetType === 'All' || d.targetType === targetType;
+        const segmentMatch = segment === 'All' || d.segment === segment;
+        const searchMatch =
+          d.donorCode.toLowerCase().includes(search) ||
+          d.displayName.toLowerCase().includes(search);
+        return targetTypeMatch && segmentMatch && searchMatch;
+      });
+    }
+
+    function renderSummary(data) {
+      const topTargets = data.filter(d => d.targetingScore >= 80).length;
+      const upgradeTargets = data.filter(d => d.targetType === 'Upgrade').length;
+      const renewalTargets = data.filter(d => d.targetType === 'Renewal').length;
+      const totalAsk = data.reduce((sum, d) => sum + d.askAmount, 0);
+
+      const cards = [
+        { title: 'Top Targets', value: topTargets, note: 'Targeting score 80+' },
+        { title: 'Upgrade Targets', value: upgradeTargets, note: 'Higher ask opportunities' },
+        { title: 'Renewal Targets', value: renewalTargets, note: 'Membership-focused outreach' },
+        { title: 'Recommended Ask Total', value: currency.format(totalAsk), note: 'Aggregate suggested ask volume' }
+      ];
+
+      document.getElementById('summaryGrid').innerHTML = cards.map(card => `
+        <div class="card summary-card">
+          <h3>${card.title}</h3>
+          <div class="value">${card.value}</div>
+          <div class="note">${card.note}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderTable(data) {
+      const sorted = [...data].sort((a, b) => b.targetingScore - a.targetingScore);
+
+      document.getElementById('targetTableBody').innerHTML = sorted.map((d, i) => `
+        <tr>
+          <td>${i + 1}</td>
+          <td>${d.donorCode}</td>
+          <td>${d.displayName}</td>
+          <td>${d.segment}</td>
+          <td><span class="tag">${d.targetType}</span></td>
+          <td>${d.targetingScore}</td>
+          <td>${currency.format(d.askAmount)}</td>
+          <td>${d.nextAction}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderPage() {
+      const data = filteredDonors();
+      renderSummary(data);
+      renderTable(data);
+    }
+
+    document.getElementById('targetTypeFilter').addEventListener('change', renderPage);
+    document.getElementById('segmentFilter').addEventListener('change', renderPage);
+    document.getElementById('searchBox').addEventListener('input', renderPage);
+
+    renderPage();
+  </script>
+</body>
+</html>
