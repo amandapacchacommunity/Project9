@@ -1,1 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advancement Relationship Mapping</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #1f2a44;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --shadow: 0 10px 25px rgba(31, 42, 68, 0.08);
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+    }
 
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .nav {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: var(--text);
+      background: white;
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      box-shadow: var(--shadow);
+    }
+
+    .nav a.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .hero {
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 2rem;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 850px;
+      line-height: 1.5;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+      margin-bottom: 24px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      font-size: 0.82rem;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .node-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .node {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      background: #fafafa;
+    }
+
+    .node h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    .node p {
+      margin: 4px 0;
+      color: var(--muted);
+    }
+
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .container { padding: 16px; }
+      .hero h1 { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav class="nav">
+      <a href="index.html">Risk Overview</a>
+      <a href="targeting.html">Targeting</a>
+      <a href="relationships.html" class="active">Relationships</a>
+    </nav>
+
+    <section class="hero">
+      <h1>Donor Relationship Mapping</h1>
+      <p>
+        A coded relationship page showing household, individual, and foundation-linked records
+        to support advancement portfolio planning and entity-level targeting.
+      </p>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>Relationship Records</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Initials / Entity</th>
+              <th>Type</th>
+              <th>Household</th>
+              <th>Related Foundation</th>
+              <th>Relationship Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>DG-001</td>
+              <td>A.P.</td>
+              <td>Individual</td>
+              <td>HH-014</td>
+              <td>FDN-003</td>
+              <td>Current Donor</td>
+            </tr>
+            <tr>
+              <td>DG-002</td>
+              <td>J.L.</td>
+              <td>Individual</td>
+              <td>HH-021</td>
+              <td>—</td>
+              <td>Current Donor</td>
+            </tr>
+            <tr>
+              <td>DG-003</td>
+              <td>M.C.</td>
+              <td>Individual</td>
+              <td>HH-032</td>
+              <td>—</td>
+              <td>Current Donor</td>
+            </tr>
+            <tr>
+              <td>DG-004</td>
+              <td>T.B.</td>
+              <td>Individual</td>
+              <td>HH-044</td>
+              <td>—</td>
+              <td>Lapsed Donor</td>
+            </tr>
+            <tr>
+              <td>FDN-003</td>
+              <td>PFF</td>
+              <td>Foundation</td>
+              <td>—</td>
+              <td>Patel Family Foundation</td>
+              <td>Foundation Partner</td>
+            </tr>
+            <tr>
+              <td>HH-014</td>
+              <td>Household 014</td>
+              <td>Household</td>
+              <td>HH-014</td>
+              <td>FDN-003</td>
+              <td>Linked Household</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>Relationship Notes</h2>
+        <div class="node-list">
+          <div class="node">
+            <h3>A.P. — DG-001</h3>
+            <p><strong>Type:</strong> Individual</p>
+            <p><strong>Linked Household:</strong> HH-014</p>
+            <p><strong>Linked Foundation:</strong> FDN-003</p>
+            <p><strong>Use Case:</strong> Coordinate individual stewardship with foundation outreach planning.</p>
+          </div>
+
+          <div class="node">
+            <h3>PFF — FDN-003</h3>
+            <p><strong>Type:</strong> Foundation</p>
+            <p><strong>Related Donors:</strong> DG-001</p>
+            <p><strong>Use Case:</strong> Institutional proposal and renewal tracking.</p>
+          </div>
+
+          <div class="node">
+            <h3>HH-014</h3>
+            <p><strong>Type:</strong> Household</p>
+            <p><strong>Members:</strong> DG-001</p>
+            <p><strong>Use Case:</strong> Household-level cultivation and coordinated ask strategy.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Recommended Coding Standards</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Entity Type</th>
+            <th>Pattern</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Individual Donor</td>
+            <td>DG-###</td>
+            <td>DG-001</td>
+          </tr>
+          <tr>
+            <td>Household</td>
+            <td>HH-###</td>
+            <td>HH-014</td>
+          </tr>
+          <tr>
+            <td>Foundation</td>
+            <td>FDN-###</td>
+            <td>FDN-003</td>
+          </tr>
+          <tr>
+            <td>Corporation</td>
+            <td>CORP-###</td>
+            <td>CORP-001</td>
+          </tr>
+          <tr>
+            <td>Relationship Manager</td>
+            <td>AM-##</td>
+            <td>AM-01</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</body>
+</html>
