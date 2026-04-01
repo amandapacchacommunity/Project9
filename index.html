@@ -440,4 +440,163 @@
         { title: 'Outstanding Pledge Exposure', value: currency.format(s.totalOutstanding), note: 'Open pledge balance in filtered portfolio' },
         { title: 'Average Risk Score', value: s.avgRisk, note: 'Weighted pledge and retention risk index' },
         { title: 'High-Risk Donors', value: s.highRiskCount, note: 'Require immediate stewardship review' },
-        { title: 'Lapsed Members', value: s.lapsedCount, note: 'Priority for
+        { title: 'Lapsed Members', value: s.lapsedCount, note: 'Priority for renewal before solicitation' },
+        { title: 'Avg. Fulfillment Rate', value: `${s.avgFulfillment}%`, note: 'Historical pledge completion estimate' }
+      ];
+
+      document.getElementById('kpiGrid').innerHTML = cards.map(card => `
+        <div class="card kpi">
+          <h3>${card.title}</h3>
+          <div class="value">${card.value}</div>
+          <div class="note">${card.note}</div>
+        </div>
+      `).join('');
+    }
+
+    function countsByRisk(data) {
+      return ['Low', 'Medium', 'High'].map(tier => data.filter(d => d.riskTier === tier).length);
+    }
+
+    function exposureBySegment(data) {
+      const segments = ['Major Gifts', 'Mid-Level', 'Annual Fund', 'Membership'];
+      return segments.map(segment => data.filter(d => d.segment === segment).reduce((sum, d) => sum + d.outstanding, 0));
+    }
+
+    function retentionByRisk(data) {
+      return ['Low', 'Medium', 'High'].map(tier => {
+        const group = data.filter(d => d.riskTier === tier);
+        if (!group.length) return 0;
+        return Math.round(group.reduce((sum, d) => sum + d.retentionPct, 0) / group.length);
+      });
+    }
+
+    function solicitationMix(data) {
+      const mix = { Upgrade: 0, Standard: 0, Stewardship: 0 };
+      data.forEach(d => {
+        if (d.riskTier === 'Low') mix.Upgrade += 1;
+        else if (d.riskTier === 'Medium') mix.Standard += 1;
+        else mix.Stewardship += 1;
+      });
+      return [mix.Upgrade, mix.Standard, mix.Stewardship];
+    }
+
+    function destroyCharts() {
+      [riskTierChart, exposureChart, retentionChart, solicitationChart].forEach(chart => {
+        if (chart) chart.destroy();
+      });
+    }
+
+    function buildCharts(data) {
+      destroyCharts();
+
+      riskTierChart = new Chart(document.getElementById('riskTierChart'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Low', 'Medium', 'High'],
+          datasets: [{ data: countsByRisk(data) }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+      });
+
+      exposureChart = new Chart(document.getElementById('exposureChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Major Gifts', 'Mid-Level', 'Annual Fund', 'Membership'],
+          datasets: [{ label: 'Outstanding Exposure', data: exposureBySegment(data) }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: true } }
+        }
+      });
+
+      retentionChart = new Chart(document.getElementById('retentionChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Low', 'Medium', 'High'],
+          datasets: [{ label: 'Retention %', data: retentionByRisk(data) }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: { y: { beginAtZero: true, max: 100 } }
+        }
+      });
+
+      solicitationChart = new Chart(document.getElementById('solicitationChart'), {
+        type: 'pie',
+        data: {
+          labels: ['Upgrade Ask', 'Standard Ask', 'Stewardship First'],
+          datasets: [{ data: solicitationMix(data) }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+      });
+    }
+
+    function renderWatchlist(data) {
+      const priority = [...data]
+        .sort((a, b) => b.riskScore - a.riskScore || b.outstanding - a.outstanding)
+        .slice(0, 6);
+
+      document.getElementById('watchlistBody').innerHTML = priority.map(d => `
+        <tr>
+          <td>${d.name}</td>
+          <td>${d.segment}</td>
+          <td><span class="badge ${d.riskTier.toLowerCase()}">${d.riskTier}</span></td>
+          <td>${currency.format(d.outstanding)}</td>
+          <td>${d.strategy}</td>
+        </tr>
+      `).join('') || `
+        <tr>
+          <td colspan="5">No donors match the current filters.</td>
+        </tr>
+      `;
+    }
+
+    function renderStrategies(data) {
+      const stats = summarize(data);
+      const strategies = [
+        {
+          title: 'High-risk intervention',
+          text: `${stats.highRiskCount} donor(s) are currently high risk. Focus on stewardship outreach, payment-plan flexibility, and smaller re-ask strategies before pursuing larger commitments.`
+        },
+        {
+          title: 'Membership renewal priority',
+          text: `${stats.lapsedCount} donor(s) have lapsed membership status. Use renewal-first messaging before broader pledge or campaign solicitations.`
+        },
+        {
+          title: 'Exposure management',
+          text: `${currency.format(stats.totalOutstanding)} remains exposed in outstanding pledges. Review top balances and assign follow-up cadence by segment.`
+        },
+        {
+          title: 'Ask optimization',
+          text: `Average fulfillment is ${stats.avgFulfillment}%. Use low-risk donors for upgrade asks, medium-risk donors for standard asks, and high-risk donors for re-engagement campaigns.`
+        }
+      ];
+
+      document.getElementById('strategyList').innerHTML = strategies.map(item => `
+        <div class="strategy-item">
+          <h4>${item.title}</h4>
+          <p>${item.text}</p>
+        </div>
+      `).join('');
+    }
+
+    function renderDashboard() {
+      const data = filteredDonors();
+      renderKPIs(data);
+      buildCharts(data);
+      renderWatchlist(data);
+      renderStrategies(data);
+    }
+
+    document.getElementById('segmentFilter').addEventListener('change', renderDashboard);
+    document.getElementById('membershipFilter').addEventListener('change', renderDashboard);
+    document.getElementById('riskFilter').addEventListener('change', renderDashboard);
+    document.getElementById('searchBox').addEventListener('input', renderDashboard);
+
+    renderDashboard();
+  </script>
+</body>
+</html>
