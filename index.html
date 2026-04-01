@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advancement Credit Risk Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #1f2a44;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --shadow: 0 10px 25px rgba(31, 42, 68, 0.08);
+      --success: #16a34a;
+      --warning: #f59e0b;
+      --danger: #dc2626;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 2rem;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 860px;
+      line-height: 1.5;
+    }
+
+    .pill {
+      background: var(--accent-soft);
+      color: var(--accent);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .filter-card,
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .filter-card {
+      padding: 14px;
+    }
+
+    .filter-card label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--muted);
+    }
+
+    .filter-card select,
+    .filter-card input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      background: white;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kpi {
+      padding: 18px;
+    }
+
+    .kpi h3 {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .kpi .value {
+      font-size: 2rem;
+      font-weight: 800;
+      margin: 10px 0 6px;
+    }
+
+    .kpi .note {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .section-title {
+      margin: 28px 0 14px;
+      font-size: 1.35rem;
+    }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      padding: 18px;
+    }
+
+    .card h2 {
+      margin: 0 0 14px;
+      font-size: 1.1rem;
+    }
+
+    .chart-wrap {
+      position: relative;
+      height: 320px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .low { background: #dcfce7; color: #166534; }
+    .medium { background: #fef3c7; color: #92400e; }
+    .high { background: #fee2e2; color: #991b1b; }
+
+    .strategy-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .strategy-item {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      background: #fafafa;
+    }
+
+    .strategy-item h4 {
+      margin: 0 0 8px;
+    }
+
+    .strategy-item p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .footer-note {
+      margin-top: 20px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 1024px) {
+      .chart-grid,
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container { padding: 16px; }
+      .hero h1 { font-size: 1.6rem; }
+      .kpi .value { font-size: 1.6rem; }
+      .chart-wrap { height: 260px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div>
+        <h1>Advancement Credit Risk Dashboard</h1>
+        <p>
+          A portfolio-level dashboard for pledge fulfillment risk, donor retention indicators,
+          membership lapse monitoring, and targeted solicitation strategy in a nonprofit advancement setting.
+        </p>
+      </div>
+      <div class="pill">Synthetic Data Demo</div>
+    </section>
+
+    <section class="filters">
+      <div class="filter-card">
+        <label for="segmentFilter">Donor Segment</label>
+        <select id="segmentFilter">
+          <option value="All">All Segments</option>
+          <option value="Major Gifts">Major Gifts</option>
+          <option value="Mid-Level">Mid-Level</option>
+          <option value="Annual Fund">Annual Fund</option>
+          <option value="Membership">Membership</option>
+        </select>
+      </div>
+      <div class="filter-card">
+        <label for="membershipFilter">Membership Status</label>
+        <select id="membershipFilter">
+          <option value="All">All Statuses</option>
+          <option value="Active">Active</option>
+          <option value="Lapsed">Lapsed</option>
+        </select>
+      </div>
+      <div class="filter-card">
+        <label for="riskFilter">Risk Tier</label>
+        <select id="riskFilter">
+          <option value="All">All Risk Tiers</option>
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+        </select>
+      </div>
+      <div class="filter-card">
+        <label for="searchBox">Search Donor</label>
+        <input id="searchBox" type="text" placeholder="Search by donor name" />
+      </div>
+    </section>
+
+    <section class="kpi-grid" id="kpiGrid"></section>
+
+    <h2 class="section-title">Portfolio Risk Overview</h2>
+    <section class="chart-grid">
+      <div class="card">
+        <h2>Risk Tier Distribution</h2>
+        <div class="chart-wrap"><canvas id="riskTierChart"></canvas></div>
+      </div>
+      <div class="card">
+        <h2>Outstanding Pledge Exposure by Segment</h2>
+        <div class="chart-wrap"><canvas id="exposureChart"></canvas></div>
+      </div>
+      <div class="card">
+        <h2>Membership Retention by Risk Tier</h2>
+        <div class="chart-wrap"><canvas id="retentionChart"></canvas></div>
+      </div>
+      <div class="card">
+        <h2>Solicitation Mix Recommendation</h2>
+        <div class="chart-wrap"><canvas id="solicitationChart"></canvas></div>
+      </div>
+    </section>
+
+    <section class="two-col">
+      <div class="card">
+        <h2>High-Priority Donor Watchlist</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Donor</th>
+              <th>Segment</th>
+              <th>Risk</th>
+              <th>Outstanding</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="watchlistBody"></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>Suggested Portfolio Actions</h2>
+        <div class="strategy-list" id="strategyList"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>How the Risk Score Works</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Indicator</th>
+            <th>Rule</th>
+            <th>Weight</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Past unpaid pledges</td>
+            <td>Any previous unpaid commitment on file</td>
+            <td>30 points</td>
+          </tr>
+          <tr>
+            <td>Late payment history</td>
+            <td>Average payment delay above 30 days</td>
+            <td>20 points</td>
+          </tr>
+          <tr>
+            <td>Lapsed membership</td>
+            <td>Membership status marked as lapsed</td>
+            <td>15 points</td>
+          </tr>
+          <tr>
+            <td>Declining giving trend</td>
+            <td>Most recent giving lower than prior periods</td>
+            <td>15 points</td>
+          </tr>
+          <tr>
+            <td>Low engagement</td>
+            <td>No recent event, meeting, or stewardship touch</td>
+            <td>10 points</td>
+          </tr>
+          <tr>
+            <td>Stretch ask size</td>
+            <td>Current pledge significantly exceeds prior giving level</td>
+            <td>10 points</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="footer-note">
+        This dashboard is designed for GitHub Pages hosting and uses front-end mock data. Replace the sample dataset in the script with your own JSON export or static data file from Python for a portfolio-specific implementation.
+      </p>
+    </section>
+  </div>
+
+  <script>
+    const donors = [
+      { name: 'Jordan Lee', segment: 'Major Gifts', membership: 'Active', riskTier: 'Low', riskScore: 24, outstanding: 12000, fulfilledPct: 96, retentionPct: 91, strategy: 'Upgrade ask to multi-year pledge', pastDueDays: 0 },
+      { name: 'Avery Patel', segment: 'Major Gifts', membership: 'Lapsed', riskTier: 'High', riskScore: 78, outstanding: 30000, fulfilledPct: 42, retentionPct: 48, strategy: 'Re-engage before new solicitation', pastDueDays: 92 },
+      { name: 'Morgan Chen', segment: 'Mid-Level', membership: 'Active', riskTier: 'Medium', riskScore: 52, outstanding: 8500, fulfilledPct: 71, retentionPct: 67, strategy: 'Moderate ask with scheduled reminders', pastDueDays: 34 },
+      { name: 'Taylor Brooks', segment: 'Membership', membership: 'Lapsed', riskTier: 'High', riskScore: 69, outstanding: 2200, fulfilledPct: 55, retentionPct: 40, strategy: 'Renew membership before pledge ask', pastDueDays: 61 },
+      { name: 'Casey Rivera', segment: 'Annual Fund', membership: 'Active', riskTier: 'Low', riskScore: 18, outstanding: 900, fulfilledPct: 98, retentionPct: 94, strategy: 'Direct renewal and annual upgrade', pastDueDays: 0 },
+      { name: 'Jamie Nguyen', segment: 'Mid-Level', membership: 'Active', riskTier: 'Medium', riskScore: 47, outstanding: 6100, fulfilledPct: 76, retentionPct: 72, strategy: 'Sustain with flexible payment schedule', pastDueDays: 21 },
+      { name: 'Riley Adams', segment: 'Annual Fund', membership: 'Lapsed', riskTier: 'High', riskScore: 72, outstanding: 3400, fulfilledPct: 51, retentionPct: 46, strategy: 'Stewardship outreach before re-ask', pastDueDays: 74 },
+      { name: 'Cameron Diaz', segment: 'Membership', membership: 'Active', riskTier: 'Low', riskScore: 29, outstanding: 500, fulfilledPct: 92, retentionPct: 88, strategy: 'Offer easy recurring membership', pastDueDays: 0 },
+      { name: 'Parker Smith', segment: 'Major Gifts', membership: 'Active', riskTier: 'Medium', riskScore: 44, outstanding: 18000, fulfilledPct: 79, retentionPct: 75, strategy: 'Maintain ask size and monitor pledge cadence', pastDueDays: 15 },
+      { name: 'Drew Johnson', segment: 'Membership', membership: 'Lapsed', riskTier: 'Medium', riskScore: 58, outstanding: 1500, fulfilledPct: 63, retentionPct: 58, strategy: 'Targeted renewal campaign', pastDueDays: 39 },
+      { name: 'Skyler Evans', segment: 'Annual Fund', membership: 'Active', riskTier: 'Low', riskScore: 22, outstanding: 1100, fulfilledPct: 95, retentionPct: 90, strategy: 'Upgrade ask in next cycle', pastDueDays: 0 },
+      { name: 'Alex Morgan', segment: 'Mid-Level', membership: 'Active', riskTier: 'High', riskScore: 64, outstanding: 9700, fulfilledPct: 59, retentionPct: 54, strategy: 'Pause large ask and use stewardship sequence', pastDueDays: 67 }
+    ];
+
+    let riskTierChart;
+    let exposureChart;
+    let retentionChart;
+    let solicitationChart;
+
+    const currency = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0
+    });
+
+    function filteredDonors() {
+      const segment = document.getElementById('segmentFilter').value;
+      const membership = document.getElementById('membershipFilter').value;
+      const risk = document.getElementById('riskFilter').value;
+      const search = document.getElementById('searchBox').value.trim().toLowerCase();
+
+      return donors.filter(d => {
+        const segmentMatch = segment === 'All' || d.segment === segment;
+        const membershipMatch = membership === 'All' || d.membership === membership;
+        const riskMatch = risk === 'All' || d.riskTier === risk;
+        const searchMatch = d.name.toLowerCase().includes(search);
+        return segmentMatch && membershipMatch && riskMatch && searchMatch;
+      });
+    }
+
+    function summarize(data) {
+      const totalDonors = data.length;
+      const totalOutstanding = data.reduce((sum, d) => sum + d.outstanding, 0);
+      const avgRisk = totalDonors ? Math.round(data.reduce((sum, d) => sum + d.riskScore, 0) / totalDonors) : 0;
+      const highRiskCount = data.filter(d => d.riskTier === 'High').length;
+      const lapsedCount = data.filter(d => d.membership === 'Lapsed').length;
+      const avgFulfillment = totalDonors ? Math.round(data.reduce((sum, d) => sum + d.fulfilledPct, 0) / totalDonors) : 0;
+      return { totalDonors, totalOutstanding, avgRisk, highRiskCount, lapsedCount, avgFulfillment };
+    }
+
+    function renderKPIs(data) {
+      const s = summarize(data);
+      const cards = [
+        { title: 'Portfolio Donors', value: s.totalDonors, note: 'Records in current dashboard view' },
+        { title: 'Outstanding Pledge Exposure', value: currency.format(s.totalOutstanding), note: 'Open pledge balance in filtered portfolio' },
+        { title: 'Average Risk Score', value: s.avgRisk, note: 'Weighted pledge and retention risk index' },
+        { title: 'High-Risk Donors', value: s.highRiskCount, note: 'Require immediate stewardship review' },
+        { title: 'Lapsed Members', value: s.lapsedCount, note: 'Priority for
