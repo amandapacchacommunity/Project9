@@ -3,14 +3,15 @@
 A multi-page GitHub Pages project focused on advancement portfolio analytics, pledge risk, donor targeting, and coded relationship mapping.
 
 ## Pages
-- `index.html` — credit risk overview
-- `targeting.html` — solicitation targeting and recommended asks
-- `relationships.html` — donor/entity coding and relationship mapping
+- `index.html` — credit risk overview, scales, and timeframes
+- `targeting.html` — solicitation targeting, targeting score scales, and action windows
+- `relationships.html` — coded donor/entity mapping, relationship meaning, and relationship review timing
 
 ## Features
 - Synthetic coded donor records
 - Risk-tier monitoring
-- Targeting score and priority list
+- Timeframe-aware review windows
+- Targeting score and priority lists
 - Relationship coding for households and foundations
 - GitHub Pages ready
 
@@ -21,4 +22,4 @@ A multi-page GitHub Pages project focused on advancement portfolio analytics, pl
 - Chart.js
 
 ## Notes
-This project uses synthetic data for portfolio demonstration.
+This project uses synthetic data for portfolio demonstration and public presentation.
