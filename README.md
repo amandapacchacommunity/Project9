@@ -1,14 +1,18 @@
 # Project 9 Advancement Credit Risk Dashboard
 
-A GitHub Pages dashboard for modeling pledge fulfillment risk, donor retention indicators, membership lapse exposure, and solicitation strategy within a nonprofit advancement portfolio.
+A multi-page GitHub Pages project focused on advancement portfolio analytics, pledge risk, donor targeting, and coded relationship mapping.
+
+## Pages
+- `index.html` — credit risk overview
+- `targeting.html` — solicitation targeting and recommended asks
+- `relationships.html` — donor/entity coding and relationship mapping
 
 ## Features
-- Portfolio-level credit risk KPIs
-- Pledge exposure analysis
-- Risk-tier donor segmentation
-- Membership retention monitoring
-- Solicitation strategy recommendations
-- Donor watchlist for stewardship follow-up
+- Synthetic coded donor records
+- Risk-tier monitoring
+- Targeting score and priority list
+- Relationship coding for households and foundations
+- GitHub Pages ready
 
 ## Tech
 - HTML
@@ -17,4 +21,4 @@ A GitHub Pages dashboard for modeling pledge fulfillment risk, donor retention i
 - Chart.js
 
 ## Notes
-This project uses synthetic data for demonstration purposes.
+This project uses synthetic data for portfolio demonstration.
