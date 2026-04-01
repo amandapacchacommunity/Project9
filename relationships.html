@@ -26,7 +26,7 @@
     }
 
     .container {
-      max-width: 1380px;
+      max-width: 1450px;
       margin: 0 auto;
       padding: 24px;
     }
@@ -71,7 +71,7 @@
       margin: 0;
       color: var(--muted);
       line-height: 1.5;
-      max-width: 900px;
+      max-width: 940px;
     }
 
     .pill {
@@ -101,11 +101,19 @@
       margin-top: -2px;
       margin-bottom: 14px;
       line-height: 1.45;
+      font-size: 0.95rem;
     }
 
     .grid-2 {
       display: grid;
       grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 18px;
       margin-bottom: 24px;
     }
@@ -149,11 +157,19 @@
     .node p {
       margin: 5px 0;
       color: var(--muted);
-      line-height: 1.4;
+      line-height: 1.45;
     }
 
-    @media (max-width: 1024px) {
-      .grid-2 {
+    ul.clean {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    @media (max-width: 1100px) {
+      .grid-2,
+      .three-col {
         grid-template-columns: 1fr;
       }
     }
@@ -176,18 +192,62 @@
       <div>
         <h1>Donor Relationship Mapping</h1>
         <p>
-          This page shows how coded donor, household, and foundation records relate to each other.
-          It also defines relationship scales, assessment meaning, and timing considerations relevant
-          to portfolio coverage and coordinated outreach.
+          This page shows coded donor, household, and foundation structures. Totals on this page are relationship-context
+          totals, meaning they describe coded records and linked entities rather than pledge exposure or recommended asks.
         </p>
       </div>
       <div class="pill">Relationship Review Horizon: 12–24 Months</div>
     </section>
 
+    <section class="card">
+      <h2>How to Read Totals on This Page</h2>
+      <p class="sub">
+        Relationship totals differ from financial totals. They describe record structure and connected entities.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Total / Context</th>
+            <th>What It Represents</th>
+            <th>Scope</th>
+            <th>Important Note</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Relationship Records</td>
+            <td>Count of coded records shown in the table</td>
+            <td>Displayed page content</td>
+            <td>Can include donors, households, and foundations</td>
+          </tr>
+          <tr>
+            <td>Household Links</td>
+            <td>Count of records tied to a household code</td>
+            <td>Page examples / dataset design</td>
+            <td>Not the same as unique household count unless deduped separately</td>
+          </tr>
+          <tr>
+            <td>Foundation Links</td>
+            <td>Count of records tied to a related foundation code</td>
+            <td>Page examples / dataset design</td>
+            <td>One foundation may be linked to multiple donor records</td>
+          </tr>
+          <tr>
+            <td>Relationship Status</td>
+            <td>Coded category like current donor, lapsed donor, linked household, partner</td>
+            <td>Record level</td>
+            <td>Status categories are descriptive, not financial measures</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
     <section class="grid-2">
       <div class="card">
         <h2>Relationship Records</h2>
-        <p class="sub">Coded records designed for public portfolio presentation without exposing real donor identities.</p>
+        <p class="sub">
+          Public-safe coded examples for donor/entity mapping. This is a structure table, not a financial ledger.
+        </p>
         <table>
           <thead>
             <tr>
@@ -276,30 +336,30 @@
             <p><strong>Type:</strong> Individual</p>
             <p><strong>Linked Household:</strong> HH-014</p>
             <p><strong>Linked Foundation:</strong> FDN-003</p>
-            <p><strong>Assessment Meaning:</strong> This record may require coordinated personal and institutional strategy.</p>
-            <p><strong>Timeframe Relevance:</strong> 30–90 day individual stewardship; 90–180 day institutional proposal planning.</p>
+            <p><strong>Assessment Meaning:</strong> Individual record with both household and institutional context.</p>
+            <p><strong>Timeframe Relevance:</strong> 30–90 day stewardship, longer institutional coordination cycle.</p>
           </div>
 
           <div class="node">
             <h3>PFF — FDN-003</h3>
             <p><strong>Type:</strong> Foundation</p>
             <p><strong>Related Donor:</strong> DG-001</p>
-            <p><strong>Assessment Meaning:</strong> Best treated as a distinct institutional prospect with linked relationship context.</p>
-            <p><strong>Timeframe Relevance:</strong> Often operates on longer proposal and grant review timelines.</p>
+            <p><strong>Assessment Meaning:</strong> Separate institutional entity that may require proposal-based outreach.</p>
+            <p><strong>Timeframe Relevance:</strong> Often 90–180+ day planning cadence.</p>
           </div>
 
           <div class="node">
             <h3>HH-014</h3>
             <p><strong>Type:</strong> Household</p>
             <p><strong>Members:</strong> DG-001</p>
-            <p><strong>Assessment Meaning:</strong> Useful for household-level cultivation, event planning, and coordinated asks.</p>
-            <p><strong>Timeframe Relevance:</strong> Touchpoints should be reviewed at least quarterly.</p>
+            <p><strong>Assessment Meaning:</strong> Supports coordinated household cultivation and ask timing.</p>
+            <p><strong>Timeframe Relevance:</strong> Best reviewed quarterly to avoid fragmented outreach.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="grid-2">
+    <section class="three-col">
       <div class="card">
         <h2>Relationship Scale Meaning</h2>
         <table>
@@ -314,22 +374,22 @@
             <tr>
               <td>Individual</td>
               <td>Single coded donor record</td>
-              <td>Best for personal giving history and one-to-one stewardship</td>
+              <td>Personal giving history and stewardship tracking</td>
             </tr>
             <tr>
               <td>Household</td>
-              <td>Grouped family or shared giving context</td>
-              <td>Useful for coordinated cultivation and ask timing</td>
+              <td>Grouped family/shared context</td>
+              <td>Coordinated cultivation and ask timing</td>
             </tr>
             <tr>
               <td>Foundation</td>
-              <td>Institutional or family foundation-linked entity</td>
-              <td>Requires proposal-style planning and separate tracking</td>
+              <td>Linked institutional entity</td>
+              <td>Proposal workflow and separate institutional tracking</td>
             </tr>
             <tr>
-              <td>Relationship Status</td>
-              <td>Current, lapsed, linked, or partner</td>
-              <td>Helps interpret readiness and stewardship priority</td>
+              <td>Status</td>
+              <td>Current, lapsed, linked, partner</td>
+              <td>Relationship interpretation rather than financial measurement</td>
             </tr>
           </tbody>
         </table>
@@ -349,25 +409,36 @@
             <tr>
               <td>Last meaningful touch</td>
               <td>30 / 60 / 90+ days</td>
-              <td>Supports recency review for outreach pacing</td>
+              <td>Helps assess recency of relationship management</td>
             </tr>
             <tr>
               <td>Household review</td>
               <td>Quarterly</td>
-              <td>Prevents duplicated or conflicting solicitations</td>
+              <td>Reduces duplicated outreach and conflicting asks</td>
             </tr>
             <tr>
               <td>Foundation planning</td>
               <td>90–180+ days</td>
-              <td>Reflects longer institutional timelines</td>
+              <td>Reflects longer institutional cycles</td>
             </tr>
             <tr>
               <td>Relationship health review</td>
               <td>12–24 months</td>
-              <td>Useful for portfolio coverage and continuity assessment</td>
+              <td>Useful for portfolio continuity and coverage analysis</td>
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <div class="card">
+        <h2>Totals Clarification Notes</h2>
+        <ul class="clean">
+          <li>These totals are structural, not financial.</li>
+          <li>One donor can be linked to one household and one foundation.</li>
+          <li>Entity examples are coded records, not confidential names.</li>
+          <li>Relationship counts do not equal giving counts.</li>
+          <li>Foundation-linked counts may overlap with donor-linked counts.</li>
+        </ul>
       </div>
     </section>
 
@@ -411,10 +482,17 @@
             <td>Relationship Manager</td>
             <td>AM-##</td>
             <td>AM-01</td>
-            <td>Advancement portfolio owner or staff code</td>
+            <td>Advancement portfolio owner/staff code</td>
           </tr>
         </tbody>
       </table>
+    </section>
+
+    <section class="card">
+      <h2>Interpretation Notes</h2>
+      <p class="sub">
+        A relationship page is meant to show who is connected to whom, not how much revenue is closed. A linked foundation or household should be understood as relationship structure. These records can inform strategy and coordination, but they should not be read as standalone financial totals.
+      </p>
     </section>
   </div>
 </body>
