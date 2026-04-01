@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Advancement Targeting Dashboard</title>
+  <title>Advancement Credit Risk Dashboard | Targeting</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
-      --bg: #f5f7fb;
+      --bg: #f4f7fb;
       --card: #ffffff;
       --text: #1f2a44;
       --muted: #6b7280;
@@ -14,6 +15,12 @@
       --shadow: 0 10px 25px rgba(31, 42, 68, 0.08);
       --accent: #2563eb;
       --accent-soft: #dbeafe;
+      --green-soft: #dcfce7;
+      --green-text: #166534;
+      --gold-soft: #fef3c7;
+      --gold-text: #92400e;
+      --red-soft: #fee2e2;
+      --red-text: #991b1b;
     }
 
     * { box-sizing: border-box; }
@@ -26,7 +33,7 @@
     }
 
     .container {
-      max-width: 1400px;
+      max-width: 1420px;
       margin: 0 auto;
       padding: 24px;
     }
@@ -55,6 +62,10 @@
     }
 
     .hero {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
       margin-bottom: 24px;
     }
 
@@ -66,15 +77,17 @@
     .hero p {
       margin: 0;
       color: var(--muted);
-      max-width: 850px;
       line-height: 1.5;
+      max-width: 900px;
     }
 
-    .filters {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-      margin-bottom: 20px;
+    .pill {
+      background: var(--accent-soft);
+      color: var(--accent);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      white-space: nowrap;
     }
 
     .card, .filter-card {
@@ -84,24 +97,33 @@
       box-shadow: var(--shadow);
     }
 
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
     .filter-card {
       padding: 14px;
     }
 
     .filter-card label {
       display: block;
-      margin-bottom: 8px;
       font-size: 0.85rem;
       font-weight: 700;
       color: var(--muted);
+      margin-bottom: 8px;
     }
 
     .filter-card select,
     .filter-card input {
       width: 100%;
-      padding: 10px 12px;
       border: 1px solid var(--border);
       border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      background: white;
     }
 
     .summary-grid {
@@ -130,6 +152,7 @@
     .summary-card .note {
       color: var(--muted);
       font-size: 0.92rem;
+      line-height: 1.4;
     }
 
     .card {
@@ -139,6 +162,20 @@
 
     .card h2 {
       margin: 0 0 14px;
+    }
+
+    .sub {
+      color: var(--muted);
+      margin-top: -2px;
+      margin-bottom: 14px;
+      line-height: 1.45;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+      margin-bottom: 24px;
     }
 
     table {
@@ -170,9 +207,25 @@
       color: var(--accent);
     }
 
+    .grade-a { background: var(--green-soft); color: var(--green-text); }
+    .grade-b { background: var(--gold-soft); color: var(--gold-text); }
+    .grade-c { background: var(--red-soft); color: var(--red-text); }
+
+    .chart-wrap {
+      position: relative;
+      height: 320px;
+    }
+
+    @media (max-width: 1024px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 640px) {
       .container { padding: 16px; }
       .hero h1 { font-size: 1.6rem; }
+      .chart-wrap { height: 260px; }
     }
   </style>
 </head>
@@ -185,11 +238,14 @@
     </nav>
 
     <section class="hero">
-      <h1>Targeting and Solicitation Dashboard</h1>
-      <p>
-        A portfolio action page showing coded donor records, targeting score, recommended ask amount,
-        and next best action for solicitation planning.
-      </p>
+      <div>
+        <h1>Targeting and Solicitation Dashboard</h1>
+        <p>
+          This page translates risk and relationship data into action. It includes targeting score scales,
+          ask guidance, suggested actions, and timeframe definitions for when a record should be prioritized.
+        </p>
+      </div>
+      <div class="pill">Targeting Horizon: Next 90 Days</div>
     </section>
 
     <section class="filters">
@@ -203,6 +259,7 @@
           <option value="Stewardship">Stewardship</option>
         </select>
       </div>
+
       <div class="filter-card">
         <label for="segmentFilter">Segment</label>
         <select id="segmentFilter">
@@ -213,6 +270,16 @@
           <option value="Membership">Membership</option>
         </select>
       </div>
+
+      <div class="filter-card">
+        <label for="priorityWindowFilter">Action Window</label>
+        <select id="priorityWindowFilter">
+          <option value="30">Next 30 Days</option>
+          <option value="60">Next 60 Days</option>
+          <option value="90">Next 90 Days</option>
+        </select>
+      </div>
+
       <div class="filter-card">
         <label for="searchBox">Search Code / Initials</label>
         <input id="searchBox" type="text" placeholder="DG-001 or A.P." />
@@ -221,50 +288,168 @@
 
     <section class="summary-grid" id="summaryGrid"></section>
 
-    <section class="card">
-      <h2>Priority Target List</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>Code</th>
-            <th>Initials</th>
-            <th>Segment</th>
-            <th>Target Type</th>
-            <th>Targeting Score</th>
-            <th>Recommended Ask</th>
-            <th>Next Best Action</th>
-          </tr>
-        </thead>
-        <tbody id="targetTableBody"></tbody>
-      </table>
+    <section class="grid-2">
+      <div class="card">
+        <h2>Priority Target List</h2>
+        <p class="sub">Highest targeting scores represent the best near-term solicitation opportunities within the selected action window.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Code</th>
+              <th>Initials</th>
+              <th>Segment</th>
+              <th>Type</th>
+              <th>Score</th>
+              <th>Ask</th>
+              <th>Window</th>
+              <th>Next Action</th>
+            </tr>
+          </thead>
+          <tbody id="targetTableBody"></tbody>
+        </table>
+      </div>
+
+      <div>
+        <div class="card">
+          <h2>Targeting Score Scale</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Band</th>
+                <th>Range</th>
+                <th>Meaning</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="tag grade-a">A Priority</span></td>
+                <td>80–100</td>
+                <td>Strong near-term targeting candidate; low friction and good capacity/engagement alignment.</td>
+              </tr>
+              <tr>
+                <td><span class="tag grade-b">B Priority</span></td>
+                <td>60–79</td>
+                <td>Viable target with some timing or relationship considerations.</td>
+              </tr>
+              <tr>
+                <td><span class="tag grade-c">C Priority</span></td>
+                <td>Below 60</td>
+                <td>Not ideal for immediate ask escalation; may need renewal, stewardship, or recovery work first.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h2>How Targeting Was Assessed</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Factor</th>
+                <th>Assessment Logic</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Capacity proxy</td>
+                <td>Modeled from pledge size and prior giving level</td>
+              </tr>
+              <tr>
+                <td>Engagement</td>
+                <td>Recent participation, touchpoints, or stewardship activity</td>
+              </tr>
+              <tr>
+                <td>Fulfillment strength</td>
+                <td>Historical completion of pledge commitments</td>
+              </tr>
+              <tr>
+                <td>Membership standing</td>
+                <td>Active status increases readiness; lapse reduces readiness</td>
+              </tr>
+              <tr>
+                <td>Risk deduction</td>
+                <td>Higher pledge/retention risk lowers targeting score</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid-2">
+      <div class="card">
+        <h2>Target Type Distribution</h2>
+        <p class="sub">Shows how many records currently fall into each solicitation strategy lane.</p>
+        <div class="chart-wrap"><canvas id="targetTypeChart"></canvas></div>
+      </div>
+
+      <div class="card">
+        <h2>Timeframe Definitions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Window</th>
+              <th>Use</th>
+              <th>Interpretation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>30 Days</td>
+              <td>Immediate outreach queue</td>
+              <td>Use for active, high-readiness targets already near ask stage.</td>
+            </tr>
+            <tr>
+              <td>60 Days</td>
+              <td>Near-term planning</td>
+              <td>Good for proposals, visits, and follow-up sequences already underway.</td>
+            </tr>
+            <tr>
+              <td>90 Days</td>
+              <td>Quarterly targeting horizon</td>
+              <td>Best for portfolio planning, moderate cultivation, and renewal campaigns.</td>
+            </tr>
+            <tr>
+              <td>Recommended ask timing</td>
+              <td>Action stage dependent</td>
+              <td>Larger asks should align with stronger readiness and lower risk.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <section class="card">
-      <h2>Targeting Logic</h2>
+      <h2>Targeting Logic Reference</h2>
       <table>
         <thead>
           <tr>
             <th>Target Type</th>
-            <th>Logic</th>
+            <th>Meaning</th>
+            <th>Typical Timing</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>Upgrade</td>
-            <td>Low risk, active membership, high fulfillment history, strong retention</td>
+            <td>Donor appears ready for a larger ask than prior cycle or average giving.</td>
+            <td>30–60 days</td>
           </tr>
           <tr>
             <td>Renewal</td>
-            <td>Membership donor due for renewal, moderate ask, active or recently lapsed</td>
+            <td>Membership or recurring donor should be renewed before broader expansion ask.</td>
+            <td>30–90 days</td>
           </tr>
           <tr>
             <td>Recovery</td>
-            <td>Lapsed or high-risk donor with open balance and reduced retention</td>
+            <td>Open balance, lapse, or weak continuity means the record should be stabilized first.</td>
+            <td>Immediate stewardship, then reassess</td>
           </tr>
           <tr>
             <td>Stewardship</td>
-            <td>Requires relationship-building before a larger ask</td>
+            <td>Relationship should be strengthened before a larger or more formal solicitation.</td>
+            <td>60–90 days</td>
           </tr>
         </tbody>
       </table>
@@ -273,88 +458,134 @@
 
   <script>
     const donors = [
-      { donorCode:"DG-001", displayName:"A.P.", segment:"Major Gifts", targetType:"Recovery", targetingScore:62, askAmount:10000, nextAction:"Schedule stewardship call" },
-      { donorCode:"DG-002", displayName:"J.L.", segment:"Major Gifts", targetType:"Upgrade", targetingScore:91, askAmount:25000, nextAction:"Personal visit" },
-      { donorCode:"DG-003", displayName:"M.C.", segment:"Mid-Level", targetType:"Stewardship", targetingScore:70, askAmount:5000, nextAction:"Proposal follow-up" },
-      { donorCode:"DG-004", displayName:"T.B.", segment:"Membership", targetType:"Renewal", targetingScore:45, askAmount:250, nextAction:"Renewal outreach" },
-      { donorCode:"DG-005", displayName:"C.R.", segment:"Annual Fund", targetType:"Upgrade", targetingScore:88, askAmount:1500, nextAction:"Upgrade annual ask" },
-      { donorCode:"DG-006", displayName:"J.N.", segment:"Mid-Level", targetType:"Stewardship", targetingScore:73, askAmount:3500, nextAction:"Flexible payment plan" },
-      { donorCode:"DG-007", displayName:"R.A.", segment:"Annual Fund", targetType:"Recovery", targetingScore:39, askAmount:500, nextAction:"Stewardship first" },
-      { donorCode:"DG-008", displayName:"C.D.", segment:"Membership", targetType:"Renewal", targetingScore:82, askAmount:300, nextAction:"Recurring membership ask" },
-      { donorCode:"DG-009", displayName:"P.S.", segment:"Major Gifts", targetType:"Upgrade", targetingScore:79, askAmount:15000, nextAction:"Monitor cadence" },
-      { donorCode:"DG-010", displayName:"D.J.", segment:"Membership", targetType:"Renewal", targetingScore:54, askAmount:200, nextAction:"Targeted renewal email" },
-      { donorCode:"FDN-003", displayName:"PFF", segment:"Major Gifts", targetType:"Upgrade", targetingScore:88, askAmount:50000, nextAction:"Prepare funding brief" }
+      { donorCode:"DG-001", displayName:"A.P.", segment:"Major Gifts", targetType:"Recovery", targetingScore:62, askAmount:10000, nextAction:"Schedule stewardship call", actionWindow:30 },
+      { donorCode:"DG-002", displayName:"J.L.", segment:"Major Gifts", targetType:"Upgrade", targetingScore:91, askAmount:25000, nextAction:"Personal visit", actionWindow:30 },
+      { donorCode:"DG-003", displayName:"M.C.", segment:"Mid-Level", targetType:"Stewardship", targetingScore:70, askAmount:5000, nextAction:"Proposal follow-up", actionWindow:60 },
+      { donorCode:"DG-004", displayName:"T.B.", segment:"Membership", targetType:"Renewal", targetingScore:45, askAmount:250, nextAction:"Renewal outreach", actionWindow:30 },
+      { donorCode:"DG-005", displayName:"C.R.", segment:"Annual Fund", targetType:"Upgrade", targetingScore:88, askAmount:1500, nextAction:"Upgrade annual ask", actionWindow:60 },
+      { donorCode:"DG-006", displayName:"J.N.", segment:"Mid-Level", targetType:"Stewardship", targetingScore:73, askAmount:3500, nextAction:"Flexible payment plan", actionWindow:90 },
+      { donorCode:"DG-007", displayName:"R.A.", segment:"Annual Fund", targetType:"Recovery", targetingScore:39, askAmount:500, nextAction:"Stewardship first", actionWindow:30 },
+      { donorCode:"DG-008", displayName:"C.D.", segment:"Membership", targetType:"Renewal", targetingScore:82, askAmount:300, nextAction:"Recurring membership ask", actionWindow:60 },
+      { donorCode:"DG-009", displayName:"P.S.", segment:"Major Gifts", targetType:"Upgrade", targetingScore:79, askAmount:15000, nextAction:"Monitor cadence", actionWindow:60 },
+      { donorCode:"DG-010", displayName:"D.J.", segment:"Membership", targetType:"Renewal", targetingScore:54, askAmount:200, nextAction:"Targeted renewal email", actionWindow:90 },
+      { donorCode:"FDN-003", displayName:"PFF", segment:"Major Gifts", targetType:"Upgrade", targetingScore:88, askAmount:50000, nextAction:"Prepare funding brief", actionWindow:90 }
     ];
 
-    const currency = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    let targetTypeChart;
+
+    const currency = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
       maximumFractionDigits: 0
     });
 
+    function priorityBand(score) {
+      if (score >= 80) return "A Priority";
+      if (score >= 60) return "B Priority";
+      return "C Priority";
+    }
+
+    function gradeClass(score) {
+      if (score >= 80) return "grade-a";
+      if (score >= 60) return "grade-b";
+      return "grade-c";
+    }
+
     function filteredDonors() {
-      const targetType = document.getElementById('targetTypeFilter').value;
-      const segment = document.getElementById('segmentFilter').value;
-      const search = document.getElementById('searchBox').value.trim().toLowerCase();
+      const type = document.getElementById("targetTypeFilter").value;
+      const segment = document.getElementById("segmentFilter").value;
+      const actionWindow = Number(document.getElementById("priorityWindowFilter").value);
+      const search = document.getElementById("searchBox").value.trim().toLowerCase();
 
       return donors.filter(d => {
-        const targetTypeMatch = targetType === 'All' || d.targetType === targetType;
-        const segmentMatch = segment === 'All' || d.segment === segment;
+        const typeMatch = type === "All" || d.targetType === type;
+        const segmentMatch = segment === "All" || d.segment === segment;
+        const actionMatch = d.actionWindow <= actionWindow;
         const searchMatch =
           d.donorCode.toLowerCase().includes(search) ||
           d.displayName.toLowerCase().includes(search);
-        return targetTypeMatch && segmentMatch && searchMatch;
+        return typeMatch && segmentMatch && actionMatch && searchMatch;
       });
     }
 
     function renderSummary(data) {
       const topTargets = data.filter(d => d.targetingScore >= 80).length;
-      const upgradeTargets = data.filter(d => d.targetType === 'Upgrade').length;
-      const renewalTargets = data.filter(d => d.targetType === 'Renewal').length;
+      const renewalTargets = data.filter(d => d.targetType === "Renewal").length;
+      const upgradeTargets = data.filter(d => d.targetType === "Upgrade").length;
       const totalAsk = data.reduce((sum, d) => sum + d.askAmount, 0);
 
       const cards = [
-        { title: 'Top Targets', value: topTargets, note: 'Targeting score 80+' },
-        { title: 'Upgrade Targets', value: upgradeTargets, note: 'Higher ask opportunities' },
-        { title: 'Renewal Targets', value: renewalTargets, note: 'Membership-focused outreach' },
-        { title: 'Recommended Ask Total', value: currency.format(totalAsk), note: 'Aggregate suggested ask volume' }
+        { title: "Top Targets", value: topTargets, note: "A-priority records with strongest immediate readiness" },
+        { title: "Upgrade Targets", value: upgradeTargets, note: "Records modeled for larger ask potential" },
+        { title: "Renewal Targets", value: renewalTargets, note: "Membership or recurring donor renewal focus" },
+        { title: "Recommended Ask Total", value: currency.format(totalAsk), note: "Aggregate suggested ask amount" }
       ];
 
-      document.getElementById('summaryGrid').innerHTML = cards.map(card => `
+      document.getElementById("summaryGrid").innerHTML = cards.map(card => `
         <div class="card summary-card">
           <h3>${card.title}</h3>
           <div class="value">${card.value}</div>
           <div class="note">${card.note}</div>
         </div>
-      `).join('');
+      `).join("");
     }
 
     function renderTable(data) {
       const sorted = [...data].sort((a, b) => b.targetingScore - a.targetingScore);
 
-      document.getElementById('targetTableBody').innerHTML = sorted.map((d, i) => `
+      document.getElementById("targetTableBody").innerHTML = sorted.map((d, i) => `
         <tr>
           <td>${i + 1}</td>
           <td>${d.donorCode}</td>
           <td>${d.displayName}</td>
           <td>${d.segment}</td>
           <td><span class="tag">${d.targetType}</span></td>
-          <td>${d.targetingScore}</td>
+          <td><span class="tag ${gradeClass(d.targetingScore)}">${d.targetingScore}</span></td>
           <td>${currency.format(d.askAmount)}</td>
+          <td>${d.actionWindow} days</td>
           <td>${d.nextAction}</td>
         </tr>
-      `).join('');
+      `).join("") || `
+        <tr><td colspan="9">No records match the current filters.</td></tr>
+      `;
+    }
+
+    function buildChart(data) {
+      if (targetTypeChart) targetTypeChart.destroy();
+
+      targetTypeChart = new Chart(document.getElementById("targetTypeChart"), {
+        type: "bar",
+        data: {
+          labels: ["Upgrade", "Renewal", "Recovery", "Stewardship"],
+          datasets: [{
+            label: "Record Count",
+            data: [
+              data.filter(d => d.targetType === "Upgrade").length,
+              data.filter(d => d.targetType === "Renewal").length,
+              data.filter(d => d.targetType === "Recovery").length,
+              data.filter(d => d.targetType === "Stewardship").length
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: { y: { beginAtZero: true } }
+        }
+      });
     }
 
     function renderPage() {
       const data = filteredDonors();
       renderSummary(data);
       renderTable(data);
+      buildChart(data);
     }
 
-    document.getElementById('targetTypeFilter').addEventListener('change', renderPage);
-    document.getElementById('segmentFilter').addEventListener('change', renderPage);
-    document.getElementById('searchBox').addEventListener('input', renderPage);
+    document.getElementById("targetTypeFilter").addEventListener("change", renderPage);
+    document.getElementById("segmentFilter").addEventListener("change", renderPage);
+    document.getElementById("priorityWindowFilter").addEventListener("change", renderPage);
+    document.getElementById("searchBox").addEventListener("input", renderPage);
 
     renderPage();
   </script>
