@@ -33,7 +33,7 @@
     }
 
     .container {
-      max-width: 1420px;
+      max-width: 1440px;
       margin: 0 auto;
       padding: 24px;
     }
@@ -79,7 +79,7 @@
       margin: 0;
       color: var(--muted);
       line-height: 1.5;
-      max-width: 900px;
+      max-width: 920px;
     }
 
     .pill {
@@ -152,8 +152,8 @@
 
     .kpi .note {
       color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.4;
+      font-size: 0.9rem;
+      line-height: 1.45;
     }
 
     .section-title {
@@ -178,7 +178,7 @@
       font-size: 1.1rem;
     }
 
-    .card p.sub {
+    .sub {
       color: var(--muted);
       margin-top: -4px;
       margin-bottom: 14px;
@@ -193,6 +193,13 @@
     .two-col {
       display: grid;
       grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .callout-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 18px;
       margin-bottom: 24px;
     }
@@ -229,17 +236,10 @@
     .medium { background: var(--med-bg); color: var(--med-text); }
     .high { background: var(--high-bg); color: var(--high-text); }
 
-    .callout-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
-      margin-bottom: 24px;
-    }
-
     .mini-note {
-      font-size: 0.9rem;
       color: var(--muted);
-      line-height: 1.5;
+      font-size: 0.92rem;
+      line-height: 1.55;
     }
 
     @media (max-width: 1024px) {
@@ -272,7 +272,7 @@
         <p>
           A synthetic portfolio dashboard for pledge fulfillment risk, membership lapse exposure,
           donor retention indicators, and advancement follow-up planning. This page focuses on
-          how risk was assessed, what each scale means, and where timeframes affect interpretation.
+          how risk was assessed, what each scale means, where timeframes matter, and what the displayed totals include.
         </p>
       </div>
       <div class="pill">Risk Review Window: 12 Months</div>
@@ -326,29 +326,64 @@
 
     <section class="kpi-grid" id="kpiGrid"></section>
 
+    <section class="card">
+      <h2>Totals Context</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Total</th>
+            <th>What It Includes</th>
+            <th>What It Excludes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Portfolio Records</td>
+            <td>All coded donor/entity records that match current filters and search.</td>
+            <td>Records outside the selected segment, membership, risk, or search view.</td>
+          </tr>
+          <tr>
+            <td>Outstanding Exposure</td>
+            <td>Open pledge balances only for filtered records.</td>
+            <td>Paid pledge amounts and historical closed commitments.</td>
+          </tr>
+          <tr>
+            <td>Average Risk Score</td>
+            <td>Mean score for filtered records within the selected 12/24/36 month review window.</td>
+            <td>Any records not currently shown by filters.</td>
+          </tr>
+          <tr>
+            <td>Average Retention</td>
+            <td>Synthetic trailing retention estimate for filtered records in the selected review window.</td>
+            <td>Forward-looking forecast or non-filtered portfolio records.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
     <h2 class="section-title">Portfolio Risk Overview</h2>
     <section class="chart-grid">
       <div class="card">
         <h2>Risk Tier Distribution</h2>
-        <p class="sub">Shows the count of coded donor records by assessed pledge/retention risk tier.</p>
+        <p class="sub">Count of filtered coded records by assessed risk tier.</p>
         <div class="chart-wrap"><canvas id="riskTierChart"></canvas></div>
       </div>
 
       <div class="card">
         <h2>Outstanding Pledge Exposure by Segment</h2>
-        <p class="sub">Tracks open pledge balances to help prioritize stewardship and collections activity.</p>
+        <p class="sub">Open balances only, not lifetime giving or total historical pledge value.</p>
         <div class="chart-wrap"><canvas id="exposureChart"></canvas></div>
       </div>
 
       <div class="card">
         <h2>Average Retention by Risk Tier</h2>
-        <p class="sub">Retention percentage is a synthetic indicator of donor continuity over the selected review period.</p>
+        <p class="sub">Average synthetic retention percentage within each current risk tier group.</p>
         <div class="chart-wrap"><canvas id="retentionChart"></canvas></div>
       </div>
 
       <div class="card">
         <h2>Membership Mix</h2>
-        <p class="sub">Compares active and lapsed members within the current filtered portfolio view.</p>
+        <p class="sub">Count of active versus lapsed records in the filtered view.</p>
         <div class="chart-wrap"><canvas id="membershipChart"></canvas></div>
       </div>
     </section>
@@ -356,7 +391,7 @@
     <section class="two-col">
       <div class="card">
         <h2>Priority Risk Watchlist</h2>
-        <p class="sub">Highest-risk records by score, then by outstanding exposure.</p>
+        <p class="sub">Highest-risk filtered records sorted by score, then by open pledge exposure.</p>
         <table>
           <thead>
             <tr>
@@ -376,7 +411,7 @@
 
       <div class="card">
         <h2>How Risk Was Assessed</h2>
-        <p class="sub">Synthetic scoring model used for portfolio demonstration.</p>
+        <p class="sub">Weighted synthetic model for advancement portfolio review.</p>
         <table>
           <thead>
             <tr>
@@ -441,7 +476,7 @@
             <tr>
               <td><span class="badge medium">Medium</span></td>
               <td>31–60</td>
-              <td>Some payment or retention concerns, usually workable with reminders, pacing, or smaller ask structure.</td>
+              <td>Some payment or retention concerns, usually workable with reminders or adjusted pacing.</td>
             </tr>
             <tr>
               <td><span class="badge high">High</span></td>
@@ -466,27 +501,27 @@
             <tr>
               <td>Risk review window</td>
               <td>12 / 24 / 36 months</td>
-              <td>Longer windows capture more pledge behavior but may dilute recent changes.</td>
+              <td>Longer windows capture more behavior but may soften recent change signals.</td>
             </tr>
             <tr>
               <td>Membership status</td>
               <td>Current cycle / last 12 months</td>
-              <td>Shows whether renewal is current or recent lapse recovery is needed.</td>
+              <td>Shows whether renewal is current or recovery work is needed.</td>
             </tr>
             <tr>
               <td>Retention rate</td>
-              <td>Trailing selected review window</td>
-              <td>Measures giving continuity within the chosen period.</td>
+              <td>Trailing selected window</td>
+              <td>Measures continuity in giving across the chosen period.</td>
             </tr>
             <tr>
               <td>Past due status</td>
-              <td>Current open pledge aging</td>
-              <td>Helps distinguish mild lateness from serious collections risk.</td>
+              <td>Current aging</td>
+              <td>Separates mild lateness from serious collection risk.</td>
             </tr>
             <tr>
-              <td>Giving trend</td>
-              <td>Most recent period vs prior periods</td>
-              <td>Identifies whether donor momentum is strengthening or weakening.</td>
+              <td>Outstanding exposure</td>
+              <td>Current open balance snapshot</td>
+              <td>Represents only dollars still open, not all lifetime pledged dollars.</td>
             </tr>
           </tbody>
         </table>
@@ -496,82 +531,27 @@
     <section class="card">
       <h2>Interpretation Notes</h2>
       <p class="mini-note">
-        This synthetic dashboard uses coded records and weighted scoring to simulate advancement portfolio review.
-        In practice, an advancement manager could align the review window to campaign cycles, annual membership terms,
-        or pledge schedules. A 12-month view is best for near-term targeting, a 24-month view is helpful for trend review,
-        and a 36-month view is useful for long-cycle major gift assessment.
+        All totals on this page are contextual to the current filtered view. That means a change in segment,
+        membership status, risk tier, search, or review window also changes the totals shown in the KPI cards
+        and charts. Outstanding exposure is an open-balance total, not a lifetime fundraising total. Average
+        retention and average risk are filtered-view averages, not full-portfolio benchmarks.
       </p>
     </section>
   </div>
 
   <script>
     const donors = [
-      {
-        donorCode: "DG-001", displayName: "A.P.", relationshipType: "Individual", segment: "Major Gifts",
-        membership: "Lapsed", riskScore12: 78, riskScore24: 72, riskScore36: 69,
-        outstanding: 30000, retention12: 48, retention24: 55, retention36: 61,
-        pastDueDays: 92, note: "Stewardship-first review recommended"
-      },
-      {
-        donorCode: "DG-002", displayName: "J.L.", relationshipType: "Individual", segment: "Major Gifts",
-        membership: "Active", riskScore12: 24, riskScore24: 28, riskScore36: 31,
-        outstanding: 12000, retention12: 91, retention24: 89, retention36: 87,
-        pastDueDays: 0, note: "Upgrade ask appropriate"
-      },
-      {
-        donorCode: "DG-003", displayName: "M.C.", relationshipType: "Individual", segment: "Mid-Level",
-        membership: "Active", riskScore12: 52, riskScore24: 49, riskScore36: 47,
-        outstanding: 8500, retention12: 67, retention24: 69, retention36: 70,
-        pastDueDays: 34, note: "Reminder-based follow-up"
-      },
-      {
-        donorCode: "DG-004", displayName: "T.B.", relationshipType: "Individual", segment: "Membership",
-        membership: "Lapsed", riskScore12: 69, riskScore24: 63, riskScore36: 60,
-        outstanding: 2200, retention12: 40, retention24: 48, retention36: 51,
-        pastDueDays: 61, note: "Renewal before larger ask"
-      },
-      {
-        donorCode: "DG-005", displayName: "C.R.", relationshipType: "Individual", segment: "Annual Fund",
-        membership: "Active", riskScore12: 18, riskScore24: 20, riskScore36: 23,
-        outstanding: 900, retention12: 94, retention24: 92, retention36: 90,
-        pastDueDays: 0, note: "Healthy retention pattern"
-      },
-      {
-        donorCode: "DG-006", displayName: "J.N.", relationshipType: "Individual", segment: "Mid-Level",
-        membership: "Active", riskScore12: 47, riskScore24: 45, riskScore36: 44,
-        outstanding: 6100, retention12: 72, retention24: 73, retention36: 74,
-        pastDueDays: 21, note: "Moderate monitoring"
-      },
-      {
-        donorCode: "DG-007", displayName: "R.A.", relationshipType: "Individual", segment: "Annual Fund",
-        membership: "Lapsed", riskScore12: 72, riskScore24: 68, riskScore36: 65,
-        outstanding: 3400, retention12: 46, retention24: 50, retention36: 54,
-        pastDueDays: 74, note: "Recovery workflow needed"
-      },
-      {
-        donorCode: "DG-008", displayName: "C.D.", relationshipType: "Individual", segment: "Membership",
-        membership: "Active", riskScore12: 29, riskScore24: 30, riskScore36: 32,
-        outstanding: 500, retention12: 88, retention24: 86, retention36: 85,
-        pastDueDays: 0, note: "Recurring membership candidate"
-      },
-      {
-        donorCode: "DG-009", displayName: "P.S.", relationshipType: "Individual", segment: "Major Gifts",
-        membership: "Active", riskScore12: 44, riskScore24: 42, riskScore36: 40,
-        outstanding: 18000, retention12: 75, retention24: 77, retention36: 79,
-        pastDueDays: 15, note: "Maintain cadence"
-      },
-      {
-        donorCode: "DG-010", displayName: "D.J.", relationshipType: "Individual", segment: "Membership",
-        membership: "Lapsed", riskScore12: 58, riskScore24: 54, riskScore36: 50,
-        outstanding: 1500, retention12: 58, retention24: 60, retention36: 63,
-        pastDueDays: 39, note: "Targeted renewal series"
-      },
-      {
-        donorCode: "FDN-003", displayName: "PFF", relationshipType: "Foundation", segment: "Major Gifts",
-        membership: "Active", riskScore12: 20, riskScore24: 22, riskScore36: 25,
-        outstanding: 50000, retention12: 89, retention24: 88, retention36: 87,
-        pastDueDays: 0, note: "Proposal-based follow-up"
-      }
+      { donorCode: "DG-001", displayName: "A.P.", relationshipType: "Individual", segment: "Major Gifts", membership: "Lapsed", riskScore12: 78, riskScore24: 72, riskScore36: 69, outstanding: 30000, retention12: 48, retention24: 55, retention36: 61, pastDueDays: 92, note: "Stewardship-first review recommended" },
+      { donorCode: "DG-002", displayName: "J.L.", relationshipType: "Individual", segment: "Major Gifts", membership: "Active", riskScore12: 24, riskScore24: 28, riskScore36: 31, outstanding: 12000, retention12: 91, retention24: 89, retention36: 87, pastDueDays: 0, note: "Upgrade ask appropriate" },
+      { donorCode: "DG-003", displayName: "M.C.", relationshipType: "Individual", segment: "Mid-Level", membership: "Active", riskScore12: 52, riskScore24: 49, riskScore36: 47, outstanding: 8500, retention12: 67, retention24: 69, retention36: 70, pastDueDays: 34, note: "Reminder-based follow-up" },
+      { donorCode: "DG-004", displayName: "T.B.", relationshipType: "Individual", segment: "Membership", membership: "Lapsed", riskScore12: 69, riskScore24: 63, riskScore36: 60, outstanding: 2200, retention12: 40, retention24: 48, retention36: 51, pastDueDays: 61, note: "Renewal before larger ask" },
+      { donorCode: "DG-005", displayName: "C.R.", relationshipType: "Individual", segment: "Annual Fund", membership: "Active", riskScore12: 18, riskScore24: 20, riskScore36: 23, outstanding: 900, retention12: 94, retention24: 92, retention36: 90, pastDueDays: 0, note: "Healthy retention pattern" },
+      { donorCode: "DG-006", displayName: "J.N.", relationshipType: "Individual", segment: "Mid-Level", membership: "Active", riskScore12: 47, riskScore24: 45, riskScore36: 44, outstanding: 6100, retention12: 72, retention24: 73, retention36: 74, pastDueDays: 21, note: "Moderate monitoring" },
+      { donorCode: "DG-007", displayName: "R.A.", relationshipType: "Individual", segment: "Annual Fund", membership: "Lapsed", riskScore12: 72, riskScore24: 68, riskScore36: 65, outstanding: 3400, retention12: 46, retention24: 50, retention36: 54, pastDueDays: 74, note: "Recovery workflow needed" },
+      { donorCode: "DG-008", displayName: "C.D.", relationshipType: "Individual", segment: "Membership", membership: "Active", riskScore12: 29, riskScore24: 30, riskScore36: 32, outstanding: 500, retention12: 88, retention24: 86, retention36: 85, pastDueDays: 0, note: "Recurring membership candidate" },
+      { donorCode: "DG-009", displayName: "P.S.", relationshipType: "Individual", segment: "Major Gifts", membership: "Active", riskScore12: 44, riskScore24: 42, riskScore36: 40, outstanding: 18000, retention12: 75, retention24: 77, retention36: 79, pastDueDays: 15, note: "Maintain cadence" },
+      { donorCode: "DG-010", displayName: "D.J.", relationshipType: "Individual", segment: "Membership", membership: "Lapsed", riskScore12: 58, riskScore24: 54, riskScore36: 50, outstanding: 1500, retention12: 58, retention24: 60, retention36: 63, pastDueDays: 39, note: "Targeted renewal series" },
+      { donorCode: "FDN-003", displayName: "PFF", relationshipType: "Foundation", segment: "Major Gifts", membership: "Active", riskScore12: 20, riskScore24: 22, riskScore36: 25, outstanding: 50000, retention12: 89, retention24: 88, retention36: 87, pastDueDays: 0, note: "Proposal-based follow-up" }
     ];
 
     let riskTierChart, exposureChart, retentionChart, membershipChart;
@@ -612,9 +592,7 @@
         const memMatch = membership === "All" || d.membership === membership;
         const donorRiskTier = riskTier(riskScoreFor(d, months));
         const riskMatch = risk === "All" || donorRiskTier === risk;
-        const searchMatch =
-          d.donorCode.toLowerCase().includes(search) ||
-          d.displayName.toLowerCase().includes(search);
+        const searchMatch = d.donorCode.toLowerCase().includes(search) || d.displayName.toLowerCase().includes(search);
         return segMatch && memMatch && riskMatch && searchMatch;
       });
     }
@@ -625,28 +603,19 @@
       const highRiskCount = data.filter(d => riskTier(riskScoreFor(d, months)) === "High").length;
       const lapsedCount = data.filter(d => d.membership === "Lapsed").length;
       const avgRetention = data.length ? Math.round(data.reduce((sum, d) => sum + retentionFor(d, months), 0) / data.length) : 0;
-      const currentWindow = `${months}-month review window`;
 
-      return {
-        count: data.length,
-        totalOutstanding,
-        avgRisk,
-        highRiskCount,
-        lapsedCount,
-        avgRetention,
-        currentWindow
-      };
+      return { count: data.length, totalOutstanding, avgRisk, highRiskCount, lapsedCount, avgRetention };
     }
 
     function renderKPIs(data, months) {
       const s = summarize(data, months);
       const cards = [
-        { title: "Portfolio Records", value: s.count, note: `Coded records in the current ${s.currentWindow}` },
-        { title: "Outstanding Exposure", value: currency.format(s.totalOutstanding), note: "Open pledge balances still at risk" },
-        { title: "Average Risk Score", value: s.avgRisk, note: "Weighted pledge/retention risk indicator" },
-        { title: "High-Risk Records", value: s.highRiskCount, note: "Records needing near-term review" },
-        { title: "Lapsed Members", value: s.lapsedCount, note: "Renewal-sensitive population" },
-        { title: "Average Retention", value: `${s.avgRetention}%`, note: "Synthetic donor continuity rate" }
+        { title: "Portfolio Records", value: s.count, note: "Count of filtered coded records in the current view." },
+        { title: "Outstanding Exposure", value: currency.format(s.totalOutstanding), note: "Open pledge balances only; excludes paid amounts." },
+        { title: "Average Risk Score", value: s.avgRisk, note: `Mean risk score across filtered records in the last ${months} months.` },
+        { title: "High-Risk Records", value: s.highRiskCount, note: "Count of filtered records currently scoring 61+." },
+        { title: "Lapsed Members", value: s.lapsedCount, note: "Filtered records with lapsed membership status." },
+        { title: "Average Retention", value: `${s.avgRetention}%`, note: `Average synthetic trailing retention in the last ${months} months.` }
       ];
 
       document.getElementById("kpiGrid").innerHTML = cards.map(card => `
@@ -687,7 +656,7 @@
         data: {
           labels: ["Major Gifts", "Mid-Level", "Annual Fund", "Membership"],
           datasets: [{
-            label: "Outstanding Exposure",
+            label: "Open Balance Total",
             data: ["Major Gifts", "Mid-Level", "Annual Fund", "Membership"].map(seg =>
               data.filter(d => d.segment === seg).reduce((sum, d) => sum + d.outstanding, 0)
             )
@@ -712,9 +681,7 @@
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          scales: {
-            y: { beginAtZero: true, max: 100 }
-          }
+          scales: { y: { beginAtZero: true, max: 100 } }
         }
       });
 
@@ -735,40 +702,4 @@
 
     function renderWatchlist(data, months) {
       const rows = [...data]
-        .sort((a, b) => riskScoreFor(b, months) - riskScoreFor(a, months) || b.outstanding - a.outstanding)
-        .slice(0, 8);
-
-      document.getElementById("watchlistBody").innerHTML = rows.map(d => `
-        <tr>
-          <td>${d.donorCode}</td>
-          <td>${d.displayName}</td>
-          <td>${d.relationshipType}</td>
-          <td>${d.segment}</td>
-          <td><span class="badge ${riskTier(riskScoreFor(d, months)).toLowerCase()}">${riskTier(riskScoreFor(d, months))}</span></td>
-          <td>${currency.format(d.outstanding)}</td>
-          <td>${d.pastDueDays}</td>
-          <td>${d.note}</td>
-        </tr>
-      `).join("") || `
-        <tr><td colspan="8">No records match the current filters.</td></tr>
-      `;
-    }
-
-    function renderDashboard() {
-      const months = getSelectedMonths();
-      const data = filteredDonors();
-      renderKPIs(data, months);
-      buildCharts(data, months);
-      renderWatchlist(data, months);
-    }
-
-    document.getElementById("segmentFilter").addEventListener("change", renderDashboard);
-    document.getElementById("membershipFilter").addEventListener("change", renderDashboard);
-    document.getElementById("riskFilter").addEventListener("change", renderDashboard);
-    document.getElementById("timeframeFilter").addEventListener("change", renderDashboard);
-    document.getElementById("searchBox").addEventListener("input", renderDashboard);
-
-    renderDashboard();
-  </script>
-</body>
-</html>
+        .sort((a, b) => riskScoreFor(b, months) - riskScoreFor(a
