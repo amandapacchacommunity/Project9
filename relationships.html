@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Advancement Relationship Mapping</title>
+  <title>Advancement Credit Risk Dashboard | Relationships</title>
   <style>
     :root {
-      --bg: #f5f7fb;
+      --bg: #f4f7fb;
       --card: #ffffff;
       --text: #1f2a44;
       --muted: #6b7280;
@@ -26,7 +26,7 @@
     }
 
     .container {
-      max-width: 1300px;
+      max-width: 1380px;
       margin: 0 auto;
       padding: 24px;
     }
@@ -55,6 +55,10 @@
     }
 
     .hero {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
       margin-bottom: 24px;
     }
 
@@ -66,8 +70,17 @@
     .hero p {
       margin: 0;
       color: var(--muted);
-      max-width: 850px;
       line-height: 1.5;
+      max-width: 900px;
+    }
+
+    .pill {
+      background: var(--accent-soft);
+      color: var(--accent);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      white-space: nowrap;
     }
 
     .card {
@@ -79,10 +92,22 @@
       margin-bottom: 24px;
     }
 
-    .grid {
+    .card h2 {
+      margin: 0 0 14px;
+    }
+
+    .sub {
+      color: var(--muted);
+      margin-top: -2px;
+      margin-bottom: 14px;
+      line-height: 1.45;
+    }
+
+    .grid-2 {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1.1fr 0.9fr;
       gap: 18px;
+      margin-bottom: 24px;
     }
 
     table {
@@ -122,12 +147,15 @@
     }
 
     .node p {
-      margin: 4px 0;
+      margin: 5px 0;
       color: var(--muted);
+      line-height: 1.4;
     }
 
-    @media (max-width: 900px) {
-      .grid { grid-template-columns: 1fr; }
+    @media (max-width: 1024px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 640px) {
@@ -145,16 +173,21 @@
     </nav>
 
     <section class="hero">
-      <h1>Donor Relationship Mapping</h1>
-      <p>
-        A coded relationship page showing household, individual, and foundation-linked records
-        to support advancement portfolio planning and entity-level targeting.
-      </p>
+      <div>
+        <h1>Donor Relationship Mapping</h1>
+        <p>
+          This page shows how coded donor, household, and foundation records relate to each other.
+          It also defines relationship scales, assessment meaning, and timing considerations relevant
+          to portfolio coverage and coordinated outreach.
+        </p>
+      </div>
+      <div class="pill">Relationship Review Horizon: 12–24 Months</div>
     </section>
 
-    <section class="grid">
+    <section class="grid-2">
       <div class="card">
         <h2>Relationship Records</h2>
+        <p class="sub">Coded records designed for public portfolio presentation without exposing real donor identities.</p>
         <table>
           <thead>
             <tr>
@@ -162,8 +195,9 @@
               <th>Initials / Entity</th>
               <th>Type</th>
               <th>Household</th>
-              <th>Related Foundation</th>
+              <th>Foundation</th>
               <th>Relationship Status</th>
+              <th>Last Meaningful Touch</th>
             </tr>
           </thead>
           <tbody>
@@ -174,6 +208,7 @@
               <td>HH-014</td>
               <td>FDN-003</td>
               <td>Current Donor</td>
+              <td>45 days ago</td>
             </tr>
             <tr>
               <td>DG-002</td>
@@ -182,6 +217,7 @@
               <td>HH-021</td>
               <td>—</td>
               <td>Current Donor</td>
+              <td>22 days ago</td>
             </tr>
             <tr>
               <td>DG-003</td>
@@ -190,6 +226,7 @@
               <td>HH-032</td>
               <td>—</td>
               <td>Current Donor</td>
+              <td>60 days ago</td>
             </tr>
             <tr>
               <td>DG-004</td>
@@ -198,6 +235,16 @@
               <td>HH-044</td>
               <td>—</td>
               <td>Lapsed Donor</td>
+              <td>130 days ago</td>
+            </tr>
+            <tr>
+              <td>DG-005</td>
+              <td>C.R.</td>
+              <td>Individual</td>
+              <td>HH-011</td>
+              <td>—</td>
+              <td>Current Donor</td>
+              <td>19 days ago</td>
             </tr>
             <tr>
               <td>FDN-003</td>
@@ -206,6 +253,7 @@
               <td>—</td>
               <td>Patel Family Foundation</td>
               <td>Foundation Partner</td>
+              <td>70 days ago</td>
             </tr>
             <tr>
               <td>HH-014</td>
@@ -214,36 +262,112 @@
               <td>HH-014</td>
               <td>FDN-003</td>
               <td>Linked Household</td>
+              <td>45 days ago</td>
             </tr>
           </tbody>
         </table>
       </div>
 
       <div class="card">
-        <h2>Relationship Notes</h2>
+        <h2>Relationship Interpretation Notes</h2>
         <div class="node-list">
           <div class="node">
             <h3>A.P. — DG-001</h3>
             <p><strong>Type:</strong> Individual</p>
             <p><strong>Linked Household:</strong> HH-014</p>
             <p><strong>Linked Foundation:</strong> FDN-003</p>
-            <p><strong>Use Case:</strong> Coordinate individual stewardship with foundation outreach planning.</p>
+            <p><strong>Assessment Meaning:</strong> This record may require coordinated personal and institutional strategy.</p>
+            <p><strong>Timeframe Relevance:</strong> 30–90 day individual stewardship; 90–180 day institutional proposal planning.</p>
           </div>
 
           <div class="node">
             <h3>PFF — FDN-003</h3>
             <p><strong>Type:</strong> Foundation</p>
-            <p><strong>Related Donors:</strong> DG-001</p>
-            <p><strong>Use Case:</strong> Institutional proposal and renewal tracking.</p>
+            <p><strong>Related Donor:</strong> DG-001</p>
+            <p><strong>Assessment Meaning:</strong> Best treated as a distinct institutional prospect with linked relationship context.</p>
+            <p><strong>Timeframe Relevance:</strong> Often operates on longer proposal and grant review timelines.</p>
           </div>
 
           <div class="node">
             <h3>HH-014</h3>
             <p><strong>Type:</strong> Household</p>
             <p><strong>Members:</strong> DG-001</p>
-            <p><strong>Use Case:</strong> Household-level cultivation and coordinated ask strategy.</p>
+            <p><strong>Assessment Meaning:</strong> Useful for household-level cultivation, event planning, and coordinated asks.</p>
+            <p><strong>Timeframe Relevance:</strong> Touchpoints should be reviewed at least quarterly.</p>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section class="grid-2">
+      <div class="card">
+        <h2>Relationship Scale Meaning</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Scale</th>
+              <th>Definition</th>
+              <th>Use</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Individual</td>
+              <td>Single coded donor record</td>
+              <td>Best for personal giving history and one-to-one stewardship</td>
+            </tr>
+            <tr>
+              <td>Household</td>
+              <td>Grouped family or shared giving context</td>
+              <td>Useful for coordinated cultivation and ask timing</td>
+            </tr>
+            <tr>
+              <td>Foundation</td>
+              <td>Institutional or family foundation-linked entity</td>
+              <td>Requires proposal-style planning and separate tracking</td>
+            </tr>
+            <tr>
+              <td>Relationship Status</td>
+              <td>Current, lapsed, linked, or partner</td>
+              <td>Helps interpret readiness and stewardship priority</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>Timeframe Definitions</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Measure</th>
+              <th>Typical Window</th>
+              <th>Why It Matters</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Last meaningful touch</td>
+              <td>30 / 60 / 90+ days</td>
+              <td>Supports recency review for outreach pacing</td>
+            </tr>
+            <tr>
+              <td>Household review</td>
+              <td>Quarterly</td>
+              <td>Prevents duplicated or conflicting solicitations</td>
+            </tr>
+            <tr>
+              <td>Foundation planning</td>
+              <td>90–180+ days</td>
+              <td>Reflects longer institutional timelines</td>
+            </tr>
+            <tr>
+              <td>Relationship health review</td>
+              <td>12–24 months</td>
+              <td>Useful for portfolio coverage and continuity assessment</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
@@ -255,6 +379,7 @@
             <th>Entity Type</th>
             <th>Pattern</th>
             <th>Example</th>
+            <th>Meaning</th>
           </tr>
         </thead>
         <tbody>
@@ -262,26 +387,31 @@
             <td>Individual Donor</td>
             <td>DG-###</td>
             <td>DG-001</td>
+            <td>One coded donor record</td>
           </tr>
           <tr>
             <td>Household</td>
             <td>HH-###</td>
             <td>HH-014</td>
+            <td>Shared family/household context</td>
           </tr>
           <tr>
             <td>Foundation</td>
             <td>FDN-###</td>
             <td>FDN-003</td>
+            <td>Institutional or related family foundation</td>
           </tr>
           <tr>
             <td>Corporation</td>
             <td>CORP-###</td>
             <td>CORP-001</td>
+            <td>Corporate giving entity</td>
           </tr>
           <tr>
             <td>Relationship Manager</td>
             <td>AM-##</td>
             <td>AM-01</td>
+            <td>Advancement portfolio owner or staff code</td>
           </tr>
         </tbody>
       </table>
