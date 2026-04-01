@@ -33,7 +33,7 @@
     }
 
     .container {
-      max-width: 1420px;
+      max-width: 1450px;
       margin: 0 auto;
       padding: 24px;
     }
@@ -78,7 +78,7 @@
       margin: 0;
       color: var(--muted);
       line-height: 1.5;
-      max-width: 900px;
+      max-width: 940px;
     }
 
     .pill {
@@ -151,8 +151,8 @@
 
     .summary-card .note {
       color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.4;
+      font-size: 0.9rem;
+      line-height: 1.45;
     }
 
     .card {
@@ -169,11 +169,19 @@
       margin-top: -2px;
       margin-bottom: 14px;
       line-height: 1.45;
+      font-size: 0.95rem;
     }
 
     .grid-2 {
       display: grid;
       grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 18px;
       margin-bottom: 24px;
     }
@@ -216,8 +224,16 @@
       height: 320px;
     }
 
-    @media (max-width: 1024px) {
-      .grid-2 {
+    ul.clean {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    @media (max-width: 1100px) {
+      .grid-2,
+      .three-col {
         grid-template-columns: 1fr;
       }
     }
@@ -241,11 +257,12 @@
       <div>
         <h1>Targeting and Solicitation Dashboard</h1>
         <p>
-          This page translates risk and relationship data into action. It includes targeting score scales,
-          ask guidance, suggested actions, and timeframe definitions for when a record should be prioritized.
+          This page converts portfolio review into outreach action. Totals here are primarily targeting totals:
+          counts of visible target records, counts by target type, and summed recommended ask amounts. These are
+          planning totals, not booked revenue totals.
         </p>
       </div>
-      <div class="pill">Targeting Horizon: Next 90 Days</div>
+      <div class="pill">Action Horizon: 30 / 60 / 90 Days</div>
     </section>
 
     <section class="filters">
@@ -288,10 +305,55 @@
 
     <section class="summary-grid" id="summaryGrid"></section>
 
+    <section class="card">
+      <h2>How to Read Totals on This Page</h2>
+      <p class="sub">
+        Targeting totals describe recommended action volume, not secured outcomes.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Total / KPI</th>
+            <th>What It Represents</th>
+            <th>Scope</th>
+            <th>Important Context</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Top Targets</td>
+            <td>Count of visible records with targeting score 80+</td>
+            <td>Filtered view only</td>
+            <td>Opportunity count, not guaranteed conversion count</td>
+          </tr>
+          <tr>
+            <td>Upgrade Targets</td>
+            <td>Visible records categorized as upgrade opportunities</td>
+            <td>Filtered view only</td>
+            <td>Represents recommendation count, not confirmed solicitations</td>
+          </tr>
+          <tr>
+            <td>Renewal Targets</td>
+            <td>Visible records marked for renewal-oriented action</td>
+            <td>Filtered view only</td>
+            <td>Can include lapsed or soon-to-renew records</td>
+          </tr>
+          <tr>
+            <td>Recommended Ask Total</td>
+            <td>Sum of suggested ask amounts for visible records</td>
+            <td>Filtered view only</td>
+            <td>Planning total only; does not equal forecasted gifts or closed revenue</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
     <section class="grid-2">
       <div class="card">
         <h2>Priority Target List</h2>
-        <p class="sub">Highest targeting scores represent the best near-term solicitation opportunities within the selected action window.</p>
+        <p class="sub">
+          Sorted by targeting score within the selected action horizon. This is a solicitation planning list, not a full campaign pipeline.
+        </p>
         <table>
           <thead>
             <tr>
@@ -325,17 +387,17 @@
               <tr>
                 <td><span class="tag grade-a">A Priority</span></td>
                 <td>80–100</td>
-                <td>Strong near-term targeting candidate; low friction and good capacity/engagement alignment.</td>
+                <td>Highest near-term readiness for outreach or ask progression.</td>
               </tr>
               <tr>
                 <td><span class="tag grade-b">B Priority</span></td>
                 <td>60–79</td>
-                <td>Viable target with some timing or relationship considerations.</td>
+                <td>Good target with some timing or relationship considerations.</td>
               </tr>
               <tr>
                 <td><span class="tag grade-c">C Priority</span></td>
                 <td>Below 60</td>
-                <td>Not ideal for immediate ask escalation; may need renewal, stewardship, or recovery work first.</td>
+                <td>Needs renewal, stabilization, or stewardship before escalation.</td>
               </tr>
             </tbody>
           </table>
@@ -347,29 +409,29 @@
             <thead>
               <tr>
                 <th>Factor</th>
-                <th>Assessment Logic</th>
+                <th>Logic</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>Capacity proxy</td>
-                <td>Modeled from pledge size and prior giving level</td>
+                <td>Modeled from prior giving and pledge scale</td>
               </tr>
               <tr>
                 <td>Engagement</td>
-                <td>Recent participation, touchpoints, or stewardship activity</td>
+                <td>Recent activity improves readiness</td>
               </tr>
               <tr>
                 <td>Fulfillment strength</td>
-                <td>Historical completion of pledge commitments</td>
+                <td>Better payment history raises readiness</td>
               </tr>
               <tr>
                 <td>Membership standing</td>
-                <td>Active status increases readiness; lapse reduces readiness</td>
+                <td>Active records generally score higher than lapsed records</td>
               </tr>
               <tr>
                 <td>Risk deduction</td>
-                <td>Higher pledge/retention risk lowers targeting score</td>
+                <td>Higher credit/retention risk lowers targeting score</td>
               </tr>
             </tbody>
           </table>
@@ -377,10 +439,12 @@
       </div>
     </section>
 
-    <section class="grid-2">
+    <section class="three-col">
       <div class="card">
         <h2>Target Type Distribution</h2>
-        <p class="sub">Shows how many records currently fall into each solicitation strategy lane.</p>
+        <p class="sub">
+          Count of visible records by recommended action lane.
+        </p>
         <div class="chart-wrap"><canvas id="targetTypeChart"></canvas></div>
       </div>
 
@@ -391,32 +455,38 @@
             <tr>
               <th>Window</th>
               <th>Use</th>
-              <th>Interpretation</th>
+              <th>Meaning</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>30 Days</td>
-              <td>Immediate outreach queue</td>
-              <td>Use for active, high-readiness targets already near ask stage.</td>
+              <td>Immediate queue</td>
+              <td>Best for records already close to outreach or ask stage.</td>
             </tr>
             <tr>
               <td>60 Days</td>
               <td>Near-term planning</td>
-              <td>Good for proposals, visits, and follow-up sequences already underway.</td>
+              <td>Useful for proposals, visits, and ongoing follow-up.</td>
             </tr>
             <tr>
               <td>90 Days</td>
-              <td>Quarterly targeting horizon</td>
-              <td>Best for portfolio planning, moderate cultivation, and renewal campaigns.</td>
-            </tr>
-            <tr>
-              <td>Recommended ask timing</td>
-              <td>Action stage dependent</td>
-              <td>Larger asks should align with stronger readiness and lower risk.</td>
+              <td>Quarter planning</td>
+              <td>Useful for broader renewal or cultivation planning.</td>
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <div class="card">
+        <h2>Totals Clarification Notes</h2>
+        <ul class="clean">
+          <li>Recommended ask total is a planning sum.</li>
+          <li>Target counts reflect visible filtered records only.</li>
+          <li>One household can contribute multiple visible records.</li>
+          <li>Target type counts are recommendations, not completed actions.</li>
+          <li>A-priority count is not the same as expected gifts closed.</li>
+        </ul>
       </div>
     </section>
 
@@ -433,22 +503,22 @@
         <tbody>
           <tr>
             <td>Upgrade</td>
-            <td>Donor appears ready for a larger ask than prior cycle or average giving.</td>
+            <td>Donor appears ready for a larger ask than prior baseline</td>
             <td>30–60 days</td>
           </tr>
           <tr>
             <td>Renewal</td>
-            <td>Membership or recurring donor should be renewed before broader expansion ask.</td>
+            <td>Membership or recurring donor should be renewed first</td>
             <td>30–90 days</td>
           </tr>
           <tr>
             <td>Recovery</td>
-            <td>Open balance, lapse, or weak continuity means the record should be stabilized first.</td>
+            <td>Balance, lapse, or weakened continuity suggests stabilization first</td>
             <td>Immediate stewardship, then reassess</td>
           </tr>
           <tr>
             <td>Stewardship</td>
-            <td>Relationship should be strengthened before a larger or more formal solicitation.</td>
+            <td>Relationship-building should precede larger solicitation</td>
             <td>60–90 days</td>
           </tr>
         </tbody>
@@ -479,12 +549,6 @@
       maximumFractionDigits: 0
     });
 
-    function priorityBand(score) {
-      if (score >= 80) return "A Priority";
-      if (score >= 60) return "B Priority";
-      return "C Priority";
-    }
-
     function gradeClass(score) {
       if (score >= 80) return "grade-a";
       if (score >= 60) return "grade-b";
@@ -501,9 +565,7 @@
         const typeMatch = type === "All" || d.targetType === type;
         const segmentMatch = segment === "All" || d.segment === segment;
         const actionMatch = d.actionWindow <= actionWindow;
-        const searchMatch =
-          d.donorCode.toLowerCase().includes(search) ||
-          d.displayName.toLowerCase().includes(search);
+        const searchMatch = d.donorCode.toLowerCase().includes(search) || d.displayName.toLowerCase().includes(search);
         return typeMatch && segmentMatch && actionMatch && searchMatch;
       });
     }
@@ -515,10 +577,10 @@
       const totalAsk = data.reduce((sum, d) => sum + d.askAmount, 0);
 
       const cards = [
-        { title: "Top Targets", value: topTargets, note: "A-priority records with strongest immediate readiness" },
-        { title: "Upgrade Targets", value: upgradeTargets, note: "Records modeled for larger ask potential" },
-        { title: "Renewal Targets", value: renewalTargets, note: "Membership or recurring donor renewal focus" },
-        { title: "Recommended Ask Total", value: currency.format(totalAsk), note: "Aggregate suggested ask amount" }
+        { title:"Top Targets", value:topTargets, note:"Visible records scoring 80+ in the current filtered action window. Count only, not expected gifts closed." },
+        { title:"Upgrade Targets", value:upgradeTargets, note:"Visible records currently classified as upgrade opportunities." },
+        { title:"Renewal Targets", value:renewalTargets, note:"Visible records prioritized for renewal-oriented outreach." },
+        { title:"Recommended Ask Total", value:currency.format(totalAsk), note:"Sum of suggested asks across visible records. Planning number only, not forecast revenue." }
       ];
 
       document.getElementById("summaryGrid").innerHTML = cards.map(card => `
@@ -545,9 +607,7 @@
           <td>${d.actionWindow} days</td>
           <td>${d.nextAction}</td>
         </tr>
-      `).join("") || `
-        <tr><td colspan="9">No records match the current filters.</td></tr>
-      `;
+      `).join("") || `<tr><td colspan="9">No records match the current filters.</td></tr>`;
     }
 
     function buildChart(data) {
@@ -558,7 +618,7 @@
         data: {
           labels: ["Upgrade", "Renewal", "Recovery", "Stewardship"],
           datasets: [{
-            label: "Record Count",
+            label: "Visible Record Count",
             data: [
               data.filter(d => d.targetType === "Upgrade").length,
               data.filter(d => d.targetType === "Renewal").length,
@@ -568,9 +628,9 @@
           }]
         },
         options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: { y: { beginAtZero: true } }
+          responsive:true,
+          maintainAspectRatio:false,
+          scales:{ y:{ beginAtZero:true } }
         }
       });
     }
