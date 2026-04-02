@@ -1,49 +1,209 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Targeting</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-<div class="container">
+  <div class="container">
+    <nav class="nav">
+      <a href="index.html">Risk Overview</a>
+      <a href="targeting.html" class="active">Targeting</a>
+      <a href="relationships.html">Relationships</a>
+    </nav>
 
-<nav class="nav">
-  <a href="index.html">Risk</a>
-  <a href="targeting.html" class="active">Targeting</a>
-  <a href="relationships.html">Relationships</a>
-</nav>
+    <section class="hero">
+      <div>
+        <h1>Targeting</h1>
+        <p>
+          This page translates portfolio review into action by showing outreach readiness, recommended ask levels,
+          and next-best actions for coded records.
+        </p>
+      </div>
+      <div class="pill">Audience: Gift Officers + Managers</div>
+    </section>
 
-<h1>Targeting</h1>
+    <section class="card callout">
+      <strong>Executive summary</strong>
+      The strongest near-term opportunities sit in upgrade and renewal lanes. Recommended ask totals are planning figures, not committed revenue.
+    </section>
 
-<div class="card">
-  <h2>Totals Context</h2>
-  <ul>
-    <li>Ask total = recommended, not secured</li>
-    <li>Targets = filtered records</li>
-  </ul>
-</div>
+    <section class="kpi-grid" id="kpiGrid"></section>
 
-<div class="card">
-  <table>
-    <thead>
-      <tr><th>Code</th><th>Type</th><th>Score</th><th>Ask</th></tr>
-    </thead>
-    <tbody id="table"></tbody>
-  </table>
-</div>
+    <section class="two-col">
+      <div class="card">
+        <h2>What this page is for</h2>
+        <ul class="clean">
+          <li>Prioritize outreach in the next 30–90 days</li>
+          <li>Separate upgrade, renewal, recovery, and stewardship lanes</li>
+          <li>Estimate planning volume by recommended ask amount</li>
+          <li>Translate analysis into next-step action</li>
+        </ul>
+      </div>
 
-</div>
+      <div class="card">
+        <h2>How to interpret totals</h2>
+        <ul class="clean">
+          <li><strong>Top targets</strong> = records with highest readiness</li>
+          <li><strong>Recommended ask total</strong> = planning sum only</li>
+          <li><strong>Upgrade / renewal counts</strong> = recommended action lanes</li>
+          <li>These totals do <strong>not</strong> equal booked gifts or closed revenue</li>
+        </ul>
+      </div>
+    </section>
 
-<script src="data.js"></script>
-<script>
-document.getElementById("table").innerHTML =
-donors.map(d=>`
-<tr>
-<td>${d.donorCode}</td>
-<td>${d.targetType}</td>
-<td>${d.targetingScore}</td>
-<td>${currency(d.askAmount)}</td>
-</tr>`).join("");
-</script>
+    <section class="card">
+      <h2>Key takeaways</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Finding</th>
+            <th>What it means</th>
+            <th>Recommended action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Upgrade opportunities remain strong</td>
+            <td>Several records have both readiness and capacity</td>
+            <td>Prioritize visit/proposal planning for top upgrade records</td>
+          </tr>
+          <tr>
+            <td>Renewal work still matters operationally</td>
+            <td>Smaller asks can sustain continuity and reduce lapse risk</td>
+            <td>Sequence renewal outreach before broader escalation</td>
+          </tr>
+          <tr>
+            <td>Recovery records need different handling</td>
+            <td>Not every record should receive a larger ask now</td>
+            <td>Route recovery cases to stewardship-first workflow</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>Priority target list</h2>
+      <p class="sub">
+        Ranked by targeting score from highest to lowest.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Code</th>
+            <th>Initials</th>
+            <th>Segment</th>
+            <th>Target Type</th>
+            <th>Priority</th>
+            <th>Ask</th>
+            <th>Window</th>
+            <th>Next Action</th>
+          </tr>
+        </thead>
+        <tbody id="targetTableBody"></tbody>
+      </table>
+    </section>
+
+    <section class="three-col">
+      <div class="card">
+        <h2>Priority scale</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Band</th>
+              <th>Range</th>
+              <th>Meaning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="status priority-a">A</span></td>
+              <td>80–100</td>
+              <td>Strong near-term targeting candidate</td>
+            </tr>
+            <tr>
+              <td><span class="status priority-b">B</span></td>
+              <td>60–79</td>
+              <td>Good opportunity with some considerations</td>
+            </tr>
+            <tr>
+              <td><span class="status priority-c">C</span></td>
+              <td>Below 60</td>
+              <td>Needs renewal, stewardship, or recovery first</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>Decision guide</h2>
+        <ul class="clean">
+          <li>If A-priority records increase, expand near-term outreach capacity</li>
+          <li>If renewal counts increase, protect continuity before upgrading asks</li>
+          <li>If recovery volume rises, slow escalation and increase stewardship</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Method and limitations</h2>
+        <ul class="clean">
+          <li>Targeting scores are synthetic and modeled</li>
+          <li>Ask totals are planning totals only</li>
+          <li>One household may contribute more than one coded record</li>
+          <li>Target type is a recommendation, not a completed action</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <script src="data.js"></script>
+  <script>
+    const topTargets = targetingData.filter(d => d.targetingScore >= 80).length;
+    const upgradeTargets = targetingData.filter(d => d.targetType === "Upgrade").length;
+    const renewalTargets = targetingData.filter(d => d.targetType === "Renewal").length;
+    const askTotal = targetingData.reduce((sum, d) => sum + d.askAmount, 0);
+
+    document.getElementById("kpiGrid").innerHTML = `
+      <div class="card kpi">
+        <h3>Top Targets</h3>
+        <div class="value">${topTargets}</div>
+        <div class="note">Count of records scoring 80+. Readiness indicator, not expected closed gifts.</div>
+      </div>
+      <div class="card kpi">
+        <h3>Upgrade Targets</h3>
+        <div class="value">${upgradeTargets}</div>
+        <div class="note">Records recommended for larger ask progression.</div>
+      </div>
+      <div class="card kpi">
+        <h3>Renewal Targets</h3>
+        <div class="value">${renewalTargets}</div>
+        <div class="note">Records best served by renewal-oriented outreach.</div>
+      </div>
+      <div class="card kpi">
+        <h3>Recommended Ask Total</h3>
+        <div class="value">${currency(askTotal)}</div>
+        <div class="note">Planning total only. Does not equal forecasted or secured revenue.</div>
+      </div>
+    `;
+
+    const ranked = [...targetingData].sort((a, b) => b.targetingScore - a.targetingScore);
+
+    document.getElementById("targetTableBody").innerHTML = ranked.map((d, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${d.donorCode}</td>
+        <td>${d.displayName}</td>
+        <td>${d.segment}</td>
+        <td>${d.targetType}</td>
+        <td><span class="status ${priorityClass(d.targetingScore)}">${priorityBand(d.targetingScore)}</span></td>
+        <td>${currency(d.askAmount)}</td>
+        <td>${d.actionWindow}</td>
+        <td>${d.nextAction}</td>
+      </tr>
+    `).join("");
+  </script>
 </body>
 </html>
