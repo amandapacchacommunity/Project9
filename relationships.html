@@ -1,40 +1,198 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Relationships</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-<div class="container">
+  <div class="container">
+    <nav class="nav">
+      <a href="index.html">Risk Overview</a>
+      <a href="targeting.html">Targeting</a>
+      <a href="relationships.html" class="active">Relationships</a>
+    </nav>
 
-<nav class="nav">
-  <a href="index.html">Risk</a>
-  <a href="targeting.html">Targeting</a>
-  <a href="relationships.html" class="active">Relationships</a>
-</nav>
+    <section class="hero">
+      <div>
+        <h1>Relationships</h1>
+        <p>
+          This page explains how coded donor, household, and foundation records connect to one another so that multiple specialists can read the portfolio the same way.
+        </p>
+      </div>
+      <div class="pill">Audience: Advancement + Operations</div>
+    </section>
 
-<h1>Relationships</h1>
+    <section class="card callout">
+      <strong>Executive summary</strong>
+      Relationship records provide structural context, not financial totals. Their value is in supporting coordination, avoiding duplicated outreach, and clarifying linked entities.
+    </section>
 
-<div class="card">
-  <h2>Totals Context</h2>
-  <ul>
-    <li>Records = coded entities</li>
-    <li>Not financial totals</li>
-  </ul>
-</div>
+    <section class="kpi-grid" id="kpiGrid"></section>
 
-<div class="card">
-  <table>
-    <thead>
-      <tr><th>Code</th><th>Name</th><th>Type</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>DG-001</td><td>A.P.</td><td>Individual</td></tr>
-      <tr><td>FDN-003</td><td>PFF</td><td>Foundation</td></tr>
-    </tbody>
-  </table>
-</div>
+    <section class="two-col">
+      <div class="card">
+        <h2>What this page is for</h2>
+        <ul class="clean">
+          <li>Clarify who is linked to whom</li>
+          <li>Support household and foundation-aware outreach</li>
+          <li>Reduce conflicting or duplicated solicitations</li>
+          <li>Give specialists a shared coding system</li>
+        </ul>
+      </div>
 
-</div>
+      <div class="card">
+        <h2>How to interpret totals</h2>
+        <ul class="clean">
+          <li><strong>Relationship records</strong> = structural coded entries</li>
+          <li><strong>Household-linked count</strong> = records tied to a household code</li>
+          <li><strong>Foundation-linked count</strong> = records tied to a foundation</li>
+          <li>These are structural totals, not giving totals</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Key takeaways</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Finding</th>
+            <th>What it means</th>
+            <th>Recommended action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Some records carry both household and foundation context</td>
+            <td>More than one specialist may need aligned outreach</td>
+            <td>Coordinate strategy before major solicitation</td>
+          </tr>
+          <tr>
+            <td>Foundations follow different timing than individuals</td>
+            <td>Institutional work often requires longer lead time</td>
+            <td>Separate proposal planning from personal stewardship</td>
+          </tr>
+          <tr>
+            <td>Household coding reduces fragmented outreach</td>
+            <td>Multiple records may represent one broader relationship context</td>
+            <td>Review linked records together before contact</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>Relationship records</h2>
+      <p class="sub">
+        Public-safe coded examples for portfolio structure review.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Name / Entity</th>
+            <th>Type</th>
+            <th>Household</th>
+            <th>Foundation</th>
+            <th>Status</th>
+            <th>Last Touch</th>
+          </tr>
+        </thead>
+        <tbody id="relationshipBody"></tbody>
+      </table>
+    </section>
+
+    <section class="three-col">
+      <div class="card">
+        <h2>Relationship scale</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Meaning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Individual</td>
+              <td>Single coded donor record</td>
+            </tr>
+            <tr>
+              <td>Household</td>
+              <td>Shared family/household context</td>
+            </tr>
+            <tr>
+              <td>Foundation</td>
+              <td>Linked institutional entity</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>Decision guide</h2>
+        <ul class="clean">
+          <li>If a record is household-linked, review adjacent records before outreach</li>
+          <li>If a record is foundation-linked, separate institutional timing from personal timing</li>
+          <li>If last touch is stale, reassess relationship coordination first</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Method and limitations</h2>
+        <ul class="clean">
+          <li>All examples are synthetic and coded for public use</li>
+          <li>Relationship pages show structure, not financial outcomes</li>
+          <li>Linked counts may overlap across donor, household, and foundation views</li>
+          <li>One real-world relationship can appear in multiple coded forms</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <script src="data.js"></script>
+  <script>
+    const totalRelationshipRecords = relationshipData.length;
+    const householdLinked = relationshipData.filter(r => r.household && r.household !== "—").length;
+    const foundationLinked = relationshipData.filter(r => r.foundation && r.foundation !== "—").length;
+    const foundationEntities = relationshipData.filter(r => r.type === "Foundation").length;
+
+    document.getElementById("kpiGrid").innerHTML = `
+      <div class="card kpi">
+        <h3>Relationship Records</h3>
+        <div class="value">${totalRelationshipRecords}</div>
+        <div class="note">Count of coded structural records shown on this page.</div>
+      </div>
+      <div class="card kpi">
+        <h3>Household-Linked</h3>
+        <div class="value">${householdLinked}</div>
+        <div class="note">Records tied to a household code. Structural count only.</div>
+      </div>
+      <div class="card kpi">
+        <h3>Foundation-Linked</h3>
+        <div class="value">${foundationLinked}</div>
+        <div class="note">Records tied to a foundation reference. Not a giving total.</div>
+      </div>
+      <div class="card kpi">
+        <h3>Foundation Entities</h3>
+        <div class="value">${foundationEntities}</div>
+        <div class="note">Count of foundation-type coded entities.</div>
+      </div>
+    `;
+
+    document.getElementById("relationshipBody").innerHTML = relationshipData.map(r => `
+      <tr>
+        <td>${r.code}</td>
+        <td>${r.name}</td>
+        <td>${r.type}</td>
+        <td>${r.household}</td>
+        <td>${r.foundation}</td>
+        <td>${r.status}</td>
+        <td>${r.lastTouch}</td>
+      </tr>
+    `).join("");
+  </script>
 </body>
 </html>
