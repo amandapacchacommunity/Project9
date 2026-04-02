@@ -1,62 +1,217 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Risk Overview</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-<div class="container">
+  <div class="container">
+    <nav class="nav">
+      <a href="index.html" class="active">Risk Overview</a>
+      <a href="targeting.html">Targeting</a>
+      <a href="relationships.html">Relationships</a>
+    </nav>
 
-<nav class="nav">
-  <a href="index.html" class="active">Risk</a>
-  <a href="targeting.html">Targeting</a>
-  <a href="relationships.html">Relationships</a>
-</nav>
+    <section class="hero">
+      <div>
+        <h1>Risk Overview</h1>
+        <p>
+          This page supports portfolio review by showing where pledge and retention risk are concentrated,
+          what the totals mean, and which records need attention first.
+        </p>
+      </div>
+      <div class="pill">Audience: Advancement + Leadership</div>
+    </section>
 
-<h1>Risk Overview</h1>
+    <section class="card callout">
+      <strong>Executive summary</strong>
+      High-risk exposure is concentrated in a small number of records, especially in Major Gifts. The main decision supported here is where to focus stewardship and follow-up effort first.
+    </section>
 
-<div class="kpi-grid" id="kpis"></div>
+    <section class="kpi-grid" id="kpiGrid"></section>
 
-<div class="card">
-  <h2>Totals Context</h2>
-  <ul>
-    <li>Exposure = open pledge balances</li>
-    <li>Counts = record-level (not deduped)</li>
-    <li>Retention = average %</li>
-  </ul>
-</div>
+    <section class="two-col">
+      <div class="card">
+        <h2>What this page is for</h2>
+        <p class="sub">
+          Use this page for monthly or quarterly portfolio review.
+        </p>
+        <ul class="clean">
+          <li>Identify where open-balance risk is concentrated</li>
+          <li>See how many records fall into each risk band</li>
+          <li>Prioritize follow-up on the highest-risk records</li>
+          <li>Separate exposure totals from revenue totals</li>
+        </ul>
+      </div>
 
-<div class="card">
-  <h2>Watchlist</h2>
-  <table>
-    <thead>
-      <tr><th>Code</th><th>Risk</th><th>Outstanding</th></tr>
-    </thead>
-    <tbody id="table"></tbody>
-  </table>
-</div>
+      <div class="card">
+        <h2>How to interpret totals</h2>
+        <ul class="clean">
+          <li><strong>Portfolio records</strong> = coded records, not deduped households</li>
+          <li><strong>Outstanding exposure</strong> = open pledge balance, not booked revenue</li>
+          <li><strong>Average retention</strong> = average percentage, not a summed total</li>
+          <li><strong>High-risk records</strong> = count of records in the high-risk band</li>
+        </ul>
+      </div>
+    </section>
 
-</div>
+    <section class="card">
+      <h2>Key takeaways</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Finding</th>
+            <th>What it means</th>
+            <th>Recommended action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>High-risk records are limited in count but material in exposure</td>
+            <td>Risk is concentrated rather than evenly spread</td>
+            <td>Review top overdue records first</td>
+          </tr>
+          <tr>
+            <td>Lapsed records tend to carry weaker retention</td>
+            <td>Renewal and stewardship should precede larger asks</td>
+            <td>Route these to renewal or recovery workflow</td>
+          </tr>
+          <tr>
+            <td>Low-risk records remain important opportunity areas</td>
+            <td>Not all portfolio work is defensive; some records are ready for upgrade</td>
+            <td>Coordinate with targeting page for next-step asks</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
 
-<script src="data.js"></script>
-<script>
-const total = donors.length;
-const exposure = donors.reduce((s,d)=>s+d.outstanding,0);
-const avgRisk = Math.round(donors.reduce((s,d)=>s+d.riskScore,0)/total);
+    <section class="card">
+      <h2>Priority risk watchlist</h2>
+      <p class="sub">
+        Ranked by highest risk score, then by largest open balance.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Initials</th>
+            <th>Type</th>
+            <th>Segment</th>
+            <th>Risk</th>
+            <th>Outstanding</th>
+            <th>Past Due</th>
+            <th>Review Note</th>
+          </tr>
+        </thead>
+        <tbody id="watchlistBody"></tbody>
+      </table>
+    </section>
 
-document.getElementById("kpis").innerHTML = `
-<div class="card kpi"><div class="value">${total}</div>Total Records</div>
-<div class="card kpi"><div class="value">${currency(exposure)}</div>Exposure</div>
-<div class="card kpi"><div class="value">${avgRisk}</div>Avg Risk</div>
-`;
+    <section class="three-col">
+      <div class="card">
+        <h2>Risk scale</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Band</th>
+              <th>Range</th>
+              <th>Meaning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="status low">Low</span></td>
+              <td>0–30</td>
+              <td>Healthy payment and retention pattern</td>
+            </tr>
+            <tr>
+              <td><span class="status medium">Medium</span></td>
+              <td>31–60</td>
+              <td>Some concern; monitor and pace outreach</td>
+            </tr>
+            <tr>
+              <td><span class="status high">High</span></td>
+              <td>61–100</td>
+              <td>Elevated risk; stewardship-first review</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-document.getElementById("table").innerHTML =
-donors.map(d=>`
-<tr>
-<td>${d.donorCode}</td>
-<td><span class="badge ${riskTier(d.riskScore).toLowerCase()}">${riskTier(d.riskScore)}</span></td>
-<td>${currency(d.outstanding)}</td>
-</tr>`).join("");
-</script>
+      <div class="card">
+        <h2>Decision guide</h2>
+        <ul class="clean">
+          <li>If high-risk exposure rises, review overdue major gift records</li>
+          <li>If lapsed counts rise, prioritize renewal work</li>
+          <li>If low-risk records stay strong, review upgrade potential</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Method and limitations</h2>
+        <ul class="clean">
+          <li>Synthetic data for demonstration</li>
+          <li>Record-level counts are not deduped to household level</li>
+          <li>Exposure totals are not revenue totals</li>
+          <li>Risk scores are modeled, not production-scored</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <script src="data.js"></script>
+  <script>
+    const totalRecords = donorRiskData.length;
+    const totalExposure = donorRiskData.reduce((sum, d) => sum + d.outstanding, 0);
+    const avgRisk = Math.round(donorRiskData.reduce((sum, d) => sum + d.riskScore, 0) / totalRecords);
+    const avgRetention = Math.round(donorRiskData.reduce((sum, d) => sum + d.retention, 0) / totalRecords);
+    const highRiskCount = donorRiskData.filter(d => riskTier(d.riskScore) === "High").length;
+
+    document.getElementById("kpiGrid").innerHTML = `
+      <div class="card kpi">
+        <h3>Portfolio Records</h3>
+        <div class="value">${totalRecords}</div>
+        <div class="note">Count of coded records in this view. Record-level, not deduped households.</div>
+      </div>
+      <div class="card kpi">
+        <h3>Outstanding Exposure</h3>
+        <div class="value">${currency(totalExposure)}</div>
+        <div class="note">Sum of open pledge balances. Exposure only, not recognized revenue.</div>
+      </div>
+      <div class="card kpi">
+        <h3>Average Risk Score</h3>
+        <div class="value">${avgRisk}</div>
+        <div class="note">Average modeled risk score across all visible records.</div>
+      </div>
+      <div class="card kpi">
+        <h3>High-Risk Records</h3>
+        <div class="value">${highRiskCount}</div>
+        <div class="note">Count of records in the high-risk band.</div>
+      </div>
+      <div class="card kpi">
+        <h3>Average Retention</h3>
+        <div class="value">${avgRetention}%</div>
+        <div class="note">Average retention percentage across the portfolio.</div>
+      </div>
+    `;
+
+    const watchlist = [...donorRiskData]
+      .sort((a, b) => b.riskScore - a.riskScore || b.outstanding - a.outstanding);
+
+    document.getElementById("watchlistBody").innerHTML = watchlist.map(d => `
+      <tr>
+        <td>${d.donorCode}</td>
+        <td>${d.displayName}</td>
+        <td>${d.relationshipType}</td>
+        <td>${d.segment}</td>
+        <td><span class="status ${riskTier(d.riskScore).toLowerCase()}">${riskTier(d.riskScore)}</span></td>
+        <td>${currency(d.outstanding)}</td>
+        <td>${d.pastDueDays} days</td>
+        <td>${d.reviewNote}</td>
+      </tr>
+    `).join("");
+  </script>
 </body>
 </html>
