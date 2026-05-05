@@ -1,25 +1,39 @@
-# Project 9 Advancement Credit Risk Dashboard
+# Advancement Credit Risk Dashboard (2025)
 
-A multi-page GitHub Pages project focused on advancement portfolio analytics, pledge risk, donor targeting, and coded relationship mapping.
+## Overview
+This project is a synthetic advancement portfolio dashboard focused on pledge fulfillment risk, donor retention indicators, membership lapse exposure, and stewardship prioritization.
 
-## Pages
-- `index.html` — credit risk overview, scales, and timeframes
-- `targeting.html` — solicitation targeting, targeting score scales, and action windows
-- `relationships.html` — coded donor/entity mapping, relationship meaning, and relationship review timing
+It demonstrates how advancement teams can use data to identify revenue risk, prioritize outreach, and support long-term donor relationships.
 
-## Features
-- Synthetic coded donor records
-- Risk-tier monitoring
-- Timeframe-aware review windows
-- Targeting score and priority lists
-- Relationship coding for households and foundations
-- GitHub Pages ready
+## What This Demonstrates
+- Pledge fulfillment risk analysis
+- Donor retention monitoring
+- Membership lapse exposure
+- Stewardship prioritization
+- Advancement portfolio decision support
 
-## Tech
-- HTML
-- CSS
-- JavaScript
-- Chart.js
+## Key Features
+- Synthetic advancement portfolio data
+- Filtered-view and portfolio-level metrics
+- Donor and pledge risk indicators
+- Revenue exposure summaries
+- Dashboard-style fundraising intelligence
 
-## Notes
-This project uses synthetic data for portfolio demonstration and public presentation.
+## Example Use Cases
+This type of model could support:
+- Donor portfolio review
+- Pledge follow-up strategy
+- Membership retention planning
+- Advancement operations
+- Revenue stability monitoring
+
+## Data Note
+All data is synthetic and created for demonstration purposes only. Totals are shown as either filtered-view totals or portfolio totals, with context notes explaining whether they represent counts, balances, or derived averages.
+
+## About This Work
+This project connects advancement analytics with risk intelligence, helping organizations understand where revenue relationships may need attention.
+
+## Author
+Amanda Paccha  
+Institutional Strategy, Governance & Decision Support  
+GitHub: https://github.com/amandapacchacommunity
